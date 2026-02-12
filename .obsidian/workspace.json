@@ -15,7 +15,7 @@
               "state": {
                 "file": "Notes&Guides/Springboot Notes&Guides/SpringBoot Revising.md",
                 "mode": "source",
-                "source": false
+                "source": true
               },
               "icon": "lucide-file",
               "title": "SpringBoot Revising"
@@ -170,8 +170,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 253.5
   },
   "left-ribbon": {
     "hiddenItems": {

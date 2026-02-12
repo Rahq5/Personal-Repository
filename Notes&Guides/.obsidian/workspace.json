@@ -1,0 +1,249 @@
+{
+  "main": {
+    "id": "c1f6b093760c6194",
+    "type": "split",
+    "children": [
+      {
+        "id": "f09c32ae498cb6d2",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "511cb0f4ddc1254a",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "otherTopics/WebSocket.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "WebSocket"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "b7c71b775ddceb85",
+    "type": "split",
+    "children": [
+      {
+        "id": "b176b66d8960ff28",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1269930e6e71bf10",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "267b85e25f681569",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "057ec0b07e5cba39",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          },
+          {
+            "id": "5d3e372c0d818832",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "expermints and quesions/Experiments & questions.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Experiments & questions"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "af6e662e9ade4ceb",
+    "type": "split",
+    "children": [
+      {
+        "id": "2b602330f379c759",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "bbeb8c4fd08d87b6",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "TopicInSWE/Chosen topics in Software Engineering.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Chosen topics in Software Engineering"
+            }
+          },
+          {
+            "id": "13760513038e262a",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "JS Concepts.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from JS Concepts"
+            }
+          },
+          {
+            "id": "4d7e19bb1e025d8d",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "fe1dfc92dc138291",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "SpringBoot A-Z Notes and Guides/SpringBoot Revising.md",
+                "followCursor": false,
+                "showSearch": true,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of SpringBoot Revising"
+            }
+          },
+          {
+            "id": "eedb77f3cde671ad",
+            "type": "leaf",
+            "state": {
+              "type": "footnotes",
+              "state": {
+                "file": "Rawi_s Notes/Python-Learning/Python - Basics.md"
+              },
+              "icon": "lucide-file-signature",
+              "title": "Footnotes"
+            }
+          }
+        ],
+        "currentTab": 3
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "bases:Create new base": false,
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "511cb0f4ddc1254a",
+  "lastOpenFiles": [
+    "Linux/GitHub SSH Key Setup.md",
+    "Linux/What's SSH (Secure Shell).md",
+    "Linux/GitHub SSH Key Setup for.md",
+    "Linux/gh_GithubFromCli_CheatSheet.md",
+    "Linux/Notes_and_Guides/GitHub SSH Key Setup for.md",
+    "otherTopics/WebSocket.md",
+    "PCSProject/CCSProject (Centralized Cloud Storage Project).md",
+    "Rawi_s Notes/expermints and quesions/Experiments & questions.md",
+    "Rawi_s Notes/expermints and quesions/Project ideas.md",
+    "Rawi_s Notes/Fundmental concepts/Internet.md",
+    "SpringBoot A-Z Notes and Guides/SpringBoot Revising.md",
+    "otherTopics",
+    "Linux/Notes_and_Guides/What's SSH (Secure Shell).md",
+    "Linux/CheetSheets_for_Terminal_Apps/gh_GithubFromCli_CheatSheet.md",
+    "Screenshot From 2026-02-01 08-44-07.png",
+    "Sound Card Dummy output problem.md",
+    "Linux/Notes_and_Guides",
+    "Linux/CheetSheets_for_Terminal_Apps",
+    "Linux",
+    "Node.js Guide and notes/JavaScript/JS Concepts.md",
+    "Node.js Guide and notes/JavaScript/http-node-guide.md",
+    "Kaust-Python Notes and Guide/Python-Learning/Python - Basics.md",
+    "Kaust-Python Notes and Guide",
+    "Node.js Guide and notes",
+    "SpringBoot A-Z Notes and Guides",
+    "Rawi_s Notes/expermints and quesions/numberEncoderFlowProcessDiagram.drawio.png",
+    "Rawi_s Notes/expermints and quesions/First Node.js Projects.md",
+    "Rawi_s Notes/to search/Architecture Managing.md",
+    "Rawi_s Notes/to search/osi_model_complete_guide.md",
+    "API design.md",
+    "FRs.md",
+    "rawi's part.md",
+    "FastAPI.md",
+    "Functions.md",
+    "Kaust-Python Notes and Guide/Python-Learning/media/Screenshot From 2025-11-27 14-08-59.png",
+    "Screenshot From 2025-12-09 10-48-48.png",
+    "Kaust-Python Notes and Guide/Python-Learning/media/Screenshot From 2025-12-11 19-20-32.png",
+    "TopicInSWE/Chosen topics in Software Engineering.md",
+    "Kaust-Python Notes and Guide/Python-Learning/media/Screenshot From 2025-12-11 19-20-39.png",
+    "Kaust-Python Notes and Guide/Python-Learning/media/Screenshot From 2025-12-11 15-28-03.png",
+    "Kaust-Python Notes and Guide/Python-Learning/media/Screenshot From 2025-12-11 16-20-21.png",
+    "Kaust-Python Notes and Guide/Python-Learning/media/Screenshot From 2025-12-11 16-14-01.png",
+    "Kaust-Python Notes and Guide/Python-Learning/media/Screenshot From 2025-10-11 21-06-05.png",
+    "Kaust-Python Notes and Guide/Python-Learning/media",
+    "Untitled.base",
+    "Untitled 1.base",
+    "Untitled.canvas"
+  ]
+}

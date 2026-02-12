@@ -986,5 +986,215 @@ public class GradeServiceTest {
     - But it's a fake version you control
 
 #### Setting up Testing Classes (testing methods)
+in this section our goal is to proceed what we have done in previous section ( part1 )
+and apply unit Testing on GradeService class.
+
+**Process:**
+- `@Test` tells JUnit to run the test 
+- three steps to write any unit test:
+	- **Arrange**: mock the data needed to carry out the unit test
+	- **Act** : call the method that you want to test
+	- **Assert**: Check if the method is behaving correctly 
+
+now proceeding with the three steps one by one
+
+**1.Arrange**
+in this step i will create the testing method and mock the data to be tested 
+>Note: the nice thing the mock does when told what data to return is readen like english 
+>	as example: 
+>	{**when** the service calls, **gradeReposiroty.getGrades()**, **then** it should **return** a **list** of **grades**}
+>	becomes:
+>	`when gradeRepository.getGrade() thenReturn(Grades.asList((PASS MOCK DATA HERE))`
+```java
+@Test
+public void getGradesFromRepoTest(){
+	when(gradeRespository.getGrades()).thenReturn(Arrays.asList(
+		new Grade("Harry" , "Java" , "A++"),
+		new Grade("ABDU" , "SQL" , "S++"),
+		new Grade("bahia" , "Poerty" , "S++")
+	))
+}
+```
+
+**2.Act**
+here you gonna test if tested class is actually able to retrieve grades from repo 
+```java
+@Test
+public void getGradesFromRepoTest(){
+	when(gradeRespository.getGrades()).thenReturn(Arrays.asList(
+		new Grade("Harry" , "Java" , "A++"),
+		new Grade("ABDU" , "SQL" , "S++"),
+		new Grade("bahia" , "Poerty" , "S++")
+	));
+	
+	//check if class is able to retrive grades
+	List<Grade> result = gradeService.getGrades();
+}
+```
+
+**3.Assert**
+in this step you gonna notice that the testing will be done by your mind (you will get it) 
+so the step is to use `AssertEquals` and put the expected data and result data. the expected data is the point where you put "from mind" test results and that's what i mean by "done by your mind".
+
+syntax:
+```
+assertEquals(Expected_Output , Actual_Result)
+```
+
+```java
+@Test
+public void getGradesFromRepoTest(){
+	when(gradeRespository.getGrades()).thenReturn(Arrays.asList(
+		new Grade("Harry" , "Java" , "A++"),
+		new Grade("ABDU" , "SQL" , "S++"),
+		new Grade("bahia" , "Poerty" , "S++")
+	));
+	
+	
+	List<Grade> result = gradeService.getGrades();
+	
+	// here is the core testing point + look at previous syntax to understand it
+	assertEquals("Harry" , result.get(0).getName());
+	assertEquals("SQL" , result.get(1).getSubject());
+	
+}
+
+```
+
+final code :
+```java
+@RunWith(MockitoJUnitRunner.class)
+public class GradeServiceTest {
+
+    @Mock 
+    private GradeRepository gradeRepository;
+    
+    @InjectMocks 
+    GradeService gradeService;
+
+    @Test
+    public void getGradesFromRepoTest(){
+       
+        // ========== ARRANGE (SETUP PHASE) ==========
+        // This is NOT the test yet, just preparation
+        
+        // Tell the MOCK: "when gradeRepository.getGrades() is called, return this fake data"
+        // This gradeRepository is the MOCK (fake), not real database
+        when(gradeRepository.getGrades()).thenReturn(Arrays.asList(
+            new Grade("Harry","Java","A++"),
+            new Grade("Rawi","Web","C+"),
+            new Grade("Bahia","poetry","S")
+        ));
+        // Now the mock is ready with fake data
+        
+        
+        // ========== ACT (TESTING PHASE) ==========
+        // THIS is where real testing starts
+        
+        // Call the method you're testing: gradeService.getGrades()
+        // What happens inside:
+        //   1. gradeService.getGrades() runs
+        //   2. Inside it, it calls gradeRepository.getGrades()
+        //   3. But gradeRepository is MOCK, so it returns fake data from above
+        //   4. gradeService returns that fake data
+        List<Grade> grades = gradeService.getGrades();
+        // Now 'grades' contains the fake data (Harry, Rawi, Bahia)
+        
+        
+        // ========== ASSERT (VERIFICATION PHASE) ==========
+        // Check if gradeService handled the data correctly
+        
+        // Check first grade's name is "Harry"
+        assertEquals("Harry", grades.get(0).getName());
+        
+        // Check third grade's subject is "poetry" (not "S")
+        // Note: getSubject() returns subject, not grade
+        assertEquals("poetry", grades.get(2).getSubject());
+        
+        // If these match, test PASSES ✅
+        // If not, test FAILS ❌
+    }
+}
+```
+
+to verify how many times the method was called:
+```
+verify(mock , times).method()
+```
+
+```java
+verify(gradeRepository , times(1)).submitGrade();
+```
+1. Mock
+2. times: how many times expected for the method to be called
+3. method 
+
+
+### Integration Testing
+
+#### Intro to integration testing
+as we learnt before that unit testing is meant to check every each component is working correctly as expected , while integration test maps the request and response life cycle.
+for quick intro i will show differences between unit and integration testing
+
+**Unit Testing**:
+- Tests individual units (methods/classes) in isolation
+- No Spring context needed , uses mocks instead of real dependencies
+- Failed test = broken unit that needs fixing
+  
+**Integration Testing**:
+- you will need spring context when integration testing 
+  (which means spring will really run unlike unit testing)
+- maps the entire request and response life cycle, more explaining....
+	- the test starts with mocking a request to the programs , passes through view , service, database layers
+	- last it will make assertions like 
+		- Successful response?
+		- correct view ?
+		- correct model ?
+		- and so on....
+#### Integration Testing part 1 (injecting beans & AutoConfigureMockMvc)
+navigating to `Test/GradeSubmissionApplicationTests` 
+When you run a test class with `@SpringBootTest`, Spring loads the entire application context and creates all beans (components, services, controllers, etc.) in the container.
+
+**Verifying beans are created:**
+```java
+@SpringBootTest
+class GradeSubmissionApplicationTests {
+	
+	@Autowired 
+	private GradeController controller;
+	
+	@Test
+	void contextLoads() {
+		assertNotNull(controller);  // Checks if controller bean exists
+	}
+}
+```
+
+##### MockMvc - Testing Without Real Server
+`MockMvc` lets you test your web layer (controllers, endpoints) without deploying the application or starting an actual HTTP server. You simulate HTTP requests and verify responses.
+
+To use `MockMvc`, add `@AutoConfigureMockMvc` which registers the `MockMvc` bean in the Spring container:
+```java
+@SpringBootTest
+@AutoConfigureMockMvc  // Creates MockMvc bean
+class GradeSubmissionApplicationTests {
+	
+	@Autowired 
+	private GradeController controller;
+	
+	@Autowired
+	private MockMvc mockMvc;  // Inject MockMvc
+	
+	@Test
+	void contextLoads() {
+		assertNotNull(mockMvc);     // Verify MockMvc exists
+		assertNotNull(controller);   // Verify controller exists
+	}	
+}
+```
+
+
+#### Integration Testing part 2
+
 # Extra 
 ## break point Sessions

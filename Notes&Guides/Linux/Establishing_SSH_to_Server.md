@@ -1,4 +1,3 @@
-# Definition
 # How to establish SSH connection
 ### First time (installation)
 

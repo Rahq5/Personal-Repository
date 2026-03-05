@@ -1296,5 +1296,331 @@ which means the view:"grades" and model:"grades"
 ###
 ## REST API
 
+### Introduction
+
+our goal to learn RestAPI
+**API:** is a mediator between consumer(user) and system
+
+REST Guidlines:
+- **Resource**: piece of data you can name
+- **URI**: identifies the location of source like `localhost:8080/employess` 
+- **Operations**: essential operation of REST which is (GET,PUT,DELETE,POST)
+- **JSON**: mostly used presentation in REST 
+- **Collection** : collection of multiple JSON pieces into one bundle , uses square brackets like here `[obj1 , obj2 , etc...]`
+
+### @RequestParam vs @PathVariable
+Both grab data from the URL, but from **different parts** of it.
+**`@RequestParam`** reads after the `?` `localhost:8080/hi?name=Harry`
+
+java
+```java
+@GetMapping("/hi")
+public void handlerMethod(@RequestParam String name)
+```
+
+**`@PathVariable`** reads from the path itself `localhost:8080/hi/Harry`
+java
+```java
+@GetMapping("/hi/{name}")
+public void handlerMethod(@PathVariable String name)
+```
+**When to use which:**
+- Pointing to a specific resource → `@PathVariable` → `/users/5`
+- Filtering or searching → `@RequestParam` → `/users?role=admin`
+> `@PathVariable` is preferred in REST because the URL should point directly to a resource.
+
+### REST API: GET operations
+simply gets data 
+
+WorkFlow:
+1. Client sends HTTP GET request to a URL like `/users`
+2. Spring receives it and routes it to the matching `@GetMapping` method inside a `@RestController` class
+3. Spring automatically converts the Java object to **JSON**
+4. JSON is sent back to the client as the HTTP response
+
+```java
+@RestController
+public class ContactController {
+
+    @Autowired
+    private ContactService contactService;
+
+    @GetMapping("/contact/{id}")
+    @ResponseBody
+    public ResponseEntity<Contact> getContact(@PathVariable String id){
+        Contact contact = contactService.getContact(id);
+        return new ResponseEntity<>(contact , HttpStatus.Ok); // 200 OK + contact as JSON
+    }
+}
+```
+**Definitions and explaining**:
+- **`@RestController`**: contains `@Controller` + `@ResponseBody` , marks the class as a REST handler
+- **`@ResponseBody`**: serializes (converts) the return value into JSON automatically
+- **`ResponseEntity<T>`**: represents the full HTTP response = **data** + **HTTP status code** (like 200, 404)
+- **`@PathVariable`**: extracts the value from the URL , like `/contact/5` → `id = "5"`
+- **`ResponseEntity.ok(contact)`**: wraps the contact object with HTTP status **200 OK** and returns it as the response
+
+
+### REST API: POST Operations
+simply sends data to be saved
+
+WorkFlow:
+1. Client sends HTTP POST request to a URL like `/contact` with a **JSON body** (the data)
+2. Spring receives it and routes it to the matching `@PostMapping` method inside a `@RestController` class
+3. Spring automatically converts the **JSON body** into a Java object
+4. The method processes it and sends back an HTTP status code as the response
+
+```java
+@RestController
+public class ContactController {
+
+    @Autowired
+    private ContactService contactService;
+
+    @PostMapping("/contact")
+    public ResponseEntity<HttpStatus> createContact(@RequestBody Contact contact){
+
+        if(contact != null){
+            System.out.println(contact.getName());
+            contactService.saveContact(contact);
+            return new ResponseEntity<>(HttpStatus.CREATED); // 201 CREATED
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // 204 NO CONTENT
+        }
+    }
+}
+```
+
+**Definitions and explaining**:
+- **`@PostMapping("/contact")`**: listens for POST requests at `/contact` and routes them to this method
+- **`@RequestBody`**: deserializes (converts) the incoming JSON from the request body into a Java object (`Contact`). **Without it**, Spring won't read the request body at all — the `contact` object will be `null` or empty, and your data is lost
+- **`ResponseEntity<HttpStatus>`**: represents the full HTTP response — here it only carries a **status code**, no body data
+- **`HttpStatus.CREATED`**: status code **201**, means the resource was successfully created
+- **`HttpStatus.NO_CONTENT`**: status code **204**, means the request was received but there was nothing to process
+
+### REST API: PUT Operations
+Simply **updates** an existing contact by its ID
+
+**WorkFlow:**
+1. Client sends HTTP PUT request to a URL like `/contact/456` (the ID is in the URL)
+2. Spring receives it and routes it to the matching `@PutMapping` method
+3. Spring extracts `"456"` from the URL and injects it into `id` parameter
+4. Spring converts the JSON body into a `Contact` Java object
+5. The method passes both to the service to update, then fetches and returns the updated contact
+
+```java
+@PutMapping("/contact/{id}")
+public ResponseEntity<Contact> updateContact(@PathVariable String id, @RequestBody Contact contact) {
+
+    Contact updated = contactService.updateContact(id, contact);
+    return new ResponseEntity<>(updated, HttpStatus.OK);
+}
+```
+
+**Definitions and explaining:**
+
+- `@PutMapping("/contact/{id}")`: listens for PUT requests at `/contact/{id}` — the `{id}` is a **URL placeholder** that captures whatever value the client puts there (e.g. `/contact/456` → id = `"456"`)
+- `@PathVariable String id`: extracts the `{id}` value from the URL and binds it to this parameter. Without it, Spring won't know to pull the value out of the URL
+- `@RequestBody Contact contact`: converts the incoming JSON body into a `Contact` Java object — same as POST
+- `ResponseEntity<Contact>`: the response carries both a status code **and** a body (the updated contact object), Spring serializes it back to JSON automatically
+- `HttpStatus.OK`: status code 200, means the request succeeded and the updated resource is returned in the body
+
+### REST API: DELETE Operations
+Simply **deletes** an existing contact by its ID
+
+**WorkFlow:**
+1. Client sends HTTP DELETE request to a URL like `/contact/456` (the ID is in the URL)
+2. Spring receives it and routes it to the matching `@DeleteMapping` method
+3. Spring extracts `"456"` from the URL and injects it into `id` parameter
+4. The method passes the ID to the service to delete, then returns no body — just a status code
+```java
+@DeleteMapping("/contact/{id}")
+public ResponseEntity<HttpStatus> deleteContact(@PathVariable String id) {
+    contactService.deleteContact(id);
+    return new ResponseEntity<HttpStatus>(HttpStatus.NO_CONTENT);
+}
+```
+
+**Definitions and explaining:**
+
+- `@DeleteMapping("/contact/{id}")`: listens for DELETE requests at `/contact/{id}` — the `{id}` is a **URL placeholder** that captures whatever value the client puts there (e.g. `/contact/456` → id = `"456"`)
+- `@PathVariable String id`: extracts the `{id}` value from the URL and binds it to this parameter. Without it, Spring won't know to pull the value out of the URL
+- `ResponseEntity<HttpStatus>`: the response carries **only** a status code with no body — there is nothing to return since the resource was deleted
+- `HttpStatus.NO_CONTENT`: status code 204, means the request succeeded but there is intentionally no body in the response
+
+### ExceptionHandling
+
+#### Try-Catch and Difference Between Checked and Unchecked Exceptions
+
+##### Try-Catch
+A way to **handle errors gracefully** instead of crashing the app.
+
+```java
+try {
+    // risky code
+} catch (SomeException e) {
+    // handle it
+}
+````
+
+---
+
+##### Checked vs Unchecked
+
+**The only real difference:**
+
+- **Checked** → method declares `throws` → Java **forces** you to handle it at compile time
+- **Unchecked** → no declaration → Java stays silent, crashes at **runtime** if triggered
+
+||Checked|Unchecked|
+|---|---|---|
+|Extends|`Exception`|`RuntimeException`|
+|Java forces handling?|✅ Yes|❌ No|
+|When it fails|Compile time|Runtime|
+|Fault|Outside world (file, db, network)|Your code (bad index, null, bad id)|
+
+##### Checked Exception
+
+```java
+// declared on the method — Java forces callers to handle it
+private int findIndexById(String id) throws NoContactException {
+    return list.stream()
+        .findFirst()
+        .orElseThrow(() -> new NoContactException());
+}
+
+// caller MUST catch it
+try {
+    Contact contact = contactService.getContactById(id);
+    return new ResponseEntity<>(contact, HttpStatus.OK);
+} catch (NoContactException e) {
+    return new ResponseEntity<>(HttpStatus.NOT_FOUND); // 404
+}
+```
+
+##### Unchecked Exception
+
+```java
+// extends RuntimeException — no throws declaration needed
+public class ContactNotFoundException extends RuntimeException {
+    public ContactNotFoundException(String id) {
+        super("The id '" + id + "' does not exist");
+    }
+}
+
+// just throw it — no try-catch required anywhere
+.orElseThrow(() -> new ContactNotFoundException(id));
+```
+
+---
+
+#### ErrorResponse
+
+A simple class to structure the error body returned to the client.
+
+```java
+public class ErrorResponse {
+    private String message;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    private LocalDateTime timestamp; // formatted timestamp in JSON response
+
+    public ErrorResponse(String message) {
+        this.message = message;
+        this.timestamp = LocalDateTime.now();
+    }
+}
+```
+
+Response the client receives:
+
+```json
+{
+  "message": "The id '123' does not exist",
+  "timestamp": "04-03-2026 06:30:00"
+}
+```
+
+---
+
+#### @ControllerAdvice + @ExceptionHandler
+
+Instead of try-catch in every controller method → define **one global handler** for the whole app.
+
+Flow of how the exception flys from service to the exception being thrown 
+```
+[Service Class] orElseThrow(() -> new ContactNotFoundException(id))
+        ↓
+[Spring Internals] catches it (@ControllerAdvice is watching every request)
+        ↓
+[Spring Internals] looks for @ExceptionHandler(ContactNotFoundException.class)
+        ↓
+[ApplicationExceptionHandler] handleContactNotFoundException(ContactNotFoundException ex) gets called
+        ↓
+[ApplicationExceptionHandler] returns ResponseEntity with 404 + ErrorResponse body to client
+```
+
+code example
+```java
+@ControllerAdvice // global scope
+public class ApplicationExceptionHandler {
+
+    @ExceptionHandler(ContactNotFoundException.class) // catches this specific exception
+    public ResponseEntity<Object> handleContactNotFoundException(ContactNotFoundException ex) {
+        ErrorResponse error = new ErrorResponse(ex.getMessage()); // build error body
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND); // 404 + body
+    }
+}
+```
 # Extra 
+
+#### Ambiguous Bean Problem
+When two or more classes implement the same interface and both are marked as `@Component`, Spring doesn't know which one to inject when you use `@Autowired` — so it crashes on startup.
+example:
+```java
+public interface Animal {
+    String speak();
+}
+
+@Component
+public class Dog implements Animal {
+    public String speak() { return "Woof"; }
+}
+
+@Component
+public class Cat implements Animal {
+    public String speak() { return "Meow"; }
+}
+
+// Now somewhere else:
+@Component
+public class Person {
+    @Autowired
+    Animal animal; // ❌ Spring panics here
+}
+```
+
+Spring sees **two beans** (`Dog` and `Cat`) that both can fill the `Animal` spot. It doesn't know which one to inject → it **crashes on startup**.
+
+The error looks like:
+`NoUniqueBeanDefinitionException: expected single matching bean but found 2: dog, cat`
+
+**Solution**: basically is to go to each class and put a annotation called 
+`@ConditionalOnProperty` then set the port , so each interface implementation class has it's own port like here:
+```java
+
+@Service
+@ConditionalOnProperty(name = 'Server.port' , havingValue = "9090")
+public class ContactsServiceImpl implements ContactService{
+
+}
+
+@Service
+@ConditionalOnProperty(name = 'Server.port' , havingValue = "9080")
+public class ContactsServiceImpl implements ContactService{
+
+}
+```
+
+
 ## break point Sessions

@@ -28,7 +28,7 @@ A **headless Raspberry Pi** is a Pi that runs without a monitor, keyboard, or mo
 The full Raspberry Pi OS ships with a desktop environment (GNOME). GNOME Keyring is a password vault that stores WiFi credentials — but it only unlocks **after a user logs into a desktop session**. On a headless boot with no user session, the keyring never unlocks, so WiFi never connects automatically, and a popup appears demanding manual authentication.
 
 ### 2. Wrong WiFi password stored in NetworkManager
-During attempted fixes, the wrong password (`Rawi_261005` instead of `atEAaFBmFR8`) was stored via `nmcli`, causing the keyring to keep rejecting the credentials silently even after workarounds were applied.
+During attempted fixes, the wrong password (`ra***********` instead of `at********`)(astric for privacy) was stored via `nmcli`, causing the keyring to keep rejecting the credentials silently even after workarounds were applied.
 
 ### 3. Dynamic IP on every reboot
 The router's DHCP server was assigning a random available IP to the Pi on each boot, making it impossible to SSH to a consistent address without running `nmap` every time.

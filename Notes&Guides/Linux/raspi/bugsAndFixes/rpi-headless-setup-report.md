@@ -56,7 +56,7 @@ The combination of three things resolved the issue permanently:
 ```bash
 sudo nmcli connection modify "stc_wifi_8145" connection.permissions ""
 sudo nmcli connection modify "stc_wifi_8145" connection.autoconnect yes
-sudo nmcli connection modify "stc_wifi_8145" wifi-sec.psk "atEAaFBmFR8"
+sudo nmcli connection modify "stc_wifi_8145" wifi-sec.psk "*************"
 ```
 
 - `connection.permissions ""` — makes the connection available system-wide, not tied to a user session

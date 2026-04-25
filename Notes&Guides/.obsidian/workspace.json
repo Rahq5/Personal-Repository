@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "C_and_C++/C.md",
+                "file": "Springboot Notes&Guides/SpringBoot Revising.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "C"
+              "title": "SpringBoot Revising"
             }
           }
         ],
@@ -171,13 +171,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C_and_C++/C.md",
+                "file": "Springboot Notes&Guides/SpringBoot Revising.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of C"
+              "title": "Outline of SpringBoot Revising"
             }
           },
           {
@@ -210,10 +210,14 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "1269930e6e71bf10",
+  "active": "ab85c44839220ece",
   "lastOpenFiles": [
+    "Untitled.md",
     "Springboot Notes&Guides/SpringBoot Revising.md",
+    "revising OS.md",
     "C_and_C++/C.md",
+    "Linux/raspi/bugsAndFixes/rpi-headless-setup-report.md",
+    "2026-03-12.md",
     "C_and_C++",
     "C_",
     "Linux/GitHub SSH Key Setup.md",
@@ -245,10 +249,6 @@
     "Rawi_s Notes/expermints and quesions/First Node.js Projects.md",
     "Rawi_s Notes/to search/Architecture Managing.md",
     "Rawi_s Notes/to search/osi_model_complete_guide.md",
-    "API design.md",
-    "FRs.md",
-    "rawi's part.md",
-    "FastAPI.md",
     "Kaust-Python Notes and Guide/Python-Learning/media/Screenshot From 2025-11-27 14-08-59.png",
     "Screenshot From 2025-12-09 10-48-48.png",
     "Kaust-Python Notes and Guide/Python-Learning/media/Screenshot From 2025-12-11 19-20-32.png",

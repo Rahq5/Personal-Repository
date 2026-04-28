@@ -2861,6 +2861,318 @@ WHERE age > ?
 
 Official reference → https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html
 
+## Bidirectional: One to Many
+
+### The Problem — Navigation Only Goes One Way
+
+In the previous section, you built a **unidirectional Many-to-One** relationship. The `Student` entity holds a `@ManyToOne` reference to `Grade`, which means there is a **foreign key** (`grade_id`) living inside the `student` table.
+
+This gives you one direction of navigation:
+
+```
+Student → Grade  ✅  (student.getGrade() works)
+Grade → Student  ❌  (grade.getStudents() doesn't exist)
+```
+
+In real terms: if you query a student, you can see which grade they belong to. But if you query a grade, you get nothing about which students are enrolled in it. The `grade` table has no column pointing back to students — it never did, and it shouldn't. That's not how relational databases work.
+
+The problem isn't in the database. The database is fine. The problem is on the **Java side** — the `Grade` entity has no field representing its students, so there's no way to navigate from a grade to its list of students in your code.
+
+---
+
+### The Fix — Bidirectional Mapping
+
+To fix this, you add a `List<Student>` field to the `Grade` entity and annotate it with `@OneToMany`. This tells Hibernate: _"one grade can have many students."_
+
+Now navigation works in both directions:
+
+```
+Student → Grade  ✅  (student.getGrade())
+Grade → Student  ✅  (grade.getStudents())
+```
+
+The database structure does **not change**. No new columns, no new tables. The foreign key is still only in the `student` table. You're just teaching Java about a path that already exists in the data.
+
+---
+
+### `mappedBy` — The Most Important Part
+
+When you add `@OneToMany` to the `Grade` entity, Hibernate needs to know one critical thing: **who owns this relationship?**
+
+Without being told, Hibernate assumes you want a brand new join table — a third table in the database that maps grade IDs to student IDs. This is the **absolute NO**.
+
+```
+❌ What Hibernate does if you forget mappedBy:
+
+grade_students (join table — created by mistake)
+┌──────────┬────────────┐
+│ grade_id │ student_id │
+├──────────┼────────────┤
+│    1     │     1      │
+│    1     │     2      │
+└──────────┴────────────┘
+```
+
+You already have a foreign key in the `student` table that handles this relationship perfectly. Creating a join table duplicates that information and pollutes your database with a table you never asked for.
+
+`mappedBy` prevents this. It tells Hibernate: _"don't create anything new — this side of the relationship is already managed by the `grade` field in the `Student` class."_
+
+```java
+// Grade.java — the "one" side
+@Entity
+public class Grade {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String gradeName;
+
+    @OneToMany(mappedBy = "grade")   // "grade" = field name in Student class
+    private List<Student> students;
+
+    // getters and setters
+}
+```
+
+The value you pass to `mappedBy` must be the **exact field name** in the `Student` class that holds the `@ManyToOne` annotation. If you named it `private Grade grade` in `Student`, then `mappedBy = "grade"`. If you named it `private Grade gradeLevel`, then `mappedBy = "gradeLevel"`. It's a direct reference.
+
+```
+mappedBy = "grade"
+              ↓
+    Student.java → private Grade grade;  ← must match exactly
+```
+
+**Student.java stays the same** — no changes needed. The `@ManyToOne` side is always the owner and always holds the foreign key column.
+
+```java
+// Student.java — unchanged
+@Entity
+public class Student {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "grade_id", referencedColumnName = "id")
+    private Grade grade;   // <-- this name is what mappedBy references
+
+    // getters and setters
+}
+```
+
+---
+
+### The Infinite Loop Problem — Why `@JsonIgnore` Exists
+
+Once the relationship is bidirectional, a new problem surfaces the moment you try to serialize either entity to JSON.
+
+Jackson (the library Spring uses to convert objects to JSON) starts walking the object graph:
+
+```
+Serialize Grade
+    → has List<Student>
+        → serialize Student[0]
+            → has Grade
+                → serialize Grade again
+                    → has List<Student>
+                        → serialize Student[0] again
+                            → ...forever
+```
+
+This loop never terminates. The response body grows infinitely until the server crashes or returns a stack overflow error. The endpoint that used to work now breaks the moment bidirectionality is introduced.
+
+> **Serialization** — the process of converting a Java object into JSON (or another format) to send it over HTTP.
+
+`@JsonIgnore` is the fix. You place it on one side of the relationship to tell Jackson: _"when serializing, stop here — don't follow this field."_
+
+```java
+// Grade.java
+@OneToMany(mappedBy = "grade")
+@JsonIgnore                    // Jackson stops here, no infinite loop
+private List<Student> students;
+```
+
+Now when you serialize a `Grade`, Jackson sees the `students` field, reads `@JsonIgnore`, and simply skips it. When you serialize a `Student`, it serializes the nested `Grade` normally — but that `Grade` won't trigger a second loop because `students` is ignored.
+
+```
+Serialize Grade
+    → List<Student> → @JsonIgnore → skipped ✅
+
+Serialize Student
+    → Grade → serialize Grade
+        → List<Student> → @JsonIgnore → skipped ✅
+```
+
+The choice of which side to put `@JsonIgnore` on depends on what you want in your API responses. If GET `/student/{id}` should return the student's grade info, put `@JsonIgnore` on the `Grade` side's list. If GET `/grade/{id}` should return students, put it on the `Student` side's reference instead. Usually, `@JsonIgnore` goes on the `@OneToMany` side (the parent's list) because fetching a list of students per grade can be a separate endpoint.
+
+---
+
+### Final Structure
+
+```java
+// Grade.java
+@Entity
+public class Grade {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String gradeName;
+
+    @OneToMany(mappedBy = "grade")
+    @JsonIgnore
+    private List<Student> students;
+
+    // getters and setters
+}
+```
+
+```java
+// Student.java
+@Entity
+public class Student {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "grade_id", referencedColumnName = "id")
+    private Grade grade;
+
+    // getters and setters
+}
+```
+
+---
+
+### Big Picture Flow
+
+```
+Database (unchanged)
+student table: id | name | grade_id (FK)
+grade table:   id | grade_name
+
+Java (new — bidirectional)
+Grade ──@OneToMany(mappedBy="grade")──► List<Student>  [read only, no FK here]
+Student ──@ManyToOne──► Grade                          [owns the FK]
+
+HTTP GET /student/1
+    → serialize Student
+        → serialize nested Grade
+            → List<Student> → @JsonIgnore → stop ✅
+            → response: { id, name, grade: { id, gradeName } }
+
+HTTP GET /grade/1
+    → serialize Grade
+        → List<Student> → @JsonIgnore → stop ✅
+        → response: { id, gradeName }
+        (students not in response — fetch via separate endpoint if needed)
+```
+
+## Cascade
+### The Problem — Deleting a Grade That Has Students
+
+Try to delete a `Grade` that has students attached to it. You'd expect it to just disappear. Instead, the database throws an error and refuses.
+
+This happens because of the **foreign key constraint**. The `student` table has a `grade_id` column pointing at the `grade` table. The database enforces a rule: _"a foreign key must always point to something that exists."_ If you delete the grade, those `grade_id` values in the student rows would point to nothing — a broken reference. The database blocks the deletion to protect data integrity.
+
+```
+DELETE grade WHERE id = 1  ← you ask this
+
+Database checks:
+student table has rows where grade_id = 1
+→ deleting grade 1 would orphan those rows
+→ ❌ ERROR: foreign key constraint violation
+```
+
+> **Orphan** — a child row whose foreign key points to a parent that no longer exists.
+
+So the question becomes: what should happen to the students when their grade is deleted? In most real scenarios, the answer is — delete them too. That's what cascade is for.
+
+---
+
+### What Cascade Does
+
+> **Cascade** — a JPA instruction that tells Hibernate: _"when an operation is performed on the parent entity, automatically perform the same operation on its children."_
+
+Without cascade, JPA operations (save, delete, etc.) are isolated — they only affect the entity you explicitly call them on. With cascade, the operation **flows down** from parent to children automatically.
+
+`CascadeType.ALL` covers every operation:
+
+|Operation|What it means|
+|---|---|
+|`PERSIST`|saving parent also saves its children|
+|`MERGE`|updating parent also updates its children|
+|`REMOVE`|deleting parent also deletes its children|
+|`REFRESH`|refreshing parent also refreshes its children|
+|`DETACH`|detaching parent also detaches its children|
+
+`ALL` is the most common choice. You can pass individual types if you only want specific behavior, but `ALL` covers the full lifecycle.
+
+---
+
+### Adding Cascade to the Code
+
+Cascade is added to the `@OneToMany` annotation on the **parent** side — the `Grade` entity. The `Student` entity stays unchanged.
+
+```java
+// Grade.java
+@Entity
+public class Grade {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String gradeName;
+
+    @OneToMany(mappedBy = "grade", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Student> students;
+
+    // getters and setters
+}
+```
+
+Now when you delete a `Grade`, Hibernate first deletes all `Student` rows associated with it, then deletes the `Grade` row itself. The foreign key constraint is never violated because the children are gone before the parent is removed.
+
+```
+deleteById(1) called on gradeRepository
+        ↓
+Hibernate sees CascadeType.ALL on students list
+        ↓
+DELETE FROM student WHERE grade_id = 1   ← children first
+        ↓
+DELETE FROM grade WHERE id = 1           ← parent second
+        ↓
+✅ No constraint violation
+```
+
+---
+
+### Big Picture Flow
+
+```
+No Cascade
+gradeRepository.deleteById(1)
+    → tries DELETE FROM grade WHERE id = 1
+    → ❌ FK constraint: student rows still reference grade 1
+
+With CascadeType.ALL
+gradeRepository.deleteById(1)
+    → Hibernate checks Grade.students (cascade = ALL)
+    → DELETE FROM student WHERE grade_id = 1  (children removed first)
+    → DELETE FROM grade WHERE id = 1          (parent removed after)
+    → ✅ clean deletion, no orphans, no constraint errors
+```
 # Extra 
 
 ## Ambiguous Bean Problem

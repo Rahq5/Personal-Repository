@@ -34,6 +34,19 @@ data enters the:
 
 3. **iteration part:** This process of forward propagation, loss calculation, backpropagation and weight update is repeated for many iterations over the dataset. Over time, this iterative process reduces the loss and the network's predictions become more accurate.
 
+
+
+before going to details see answers of these questions:
+
+- **what is weight and what decides it?**:
+	it starts as a random number, They act as **scaling dials** (multipliers) determining how much attention to pay to a specific input feature.
+
+- **what bias does and why we need it?**: 
+	  it shift the line on the plot, In math terms, if weights change the slope of a line, the bias acts as the y-intercept. It moves the activation function up, down, left, or right on a graph. also handles zero inputs which results in total zero (due to multipliction on zero)
+	  - why?:
+	    Without bias, the network's decisions are forced to pass through the zero-point origin (0,0), making the model too rigid to learn real-world patterns.
+
+
 ## forward propagation
 When data is input into the network, it passes through the network in the forward direction, from the input layer through the hidden layers to the output layer. This process is known as forward propagation.
 
@@ -71,3 +84,37 @@ the network guessed something. The guess was off (wrong). Now it needs to fix it
 
 ## iterations
 really it's just iterating all of that over and over to get less wrong predictions 
+
+## Full flow of neural network
+### Neural Network Execution Flow
+
+1. **Input Entry**
+   * Features or embeddings enter Layer 1 directly from raw data as numbers ($x_1, x_2, \dots, x_n$).
+
+2. **Forward Pass (Layer by Layer)**
+   * At each neuron $j$, weights scale the inputs and bias shifts the total:
+     $$z_j = (w_1 \cdot x_1 + w_2 \cdot x_2 + \dots) + b_j$$
+   * The sum passes through an activation function (like ReLU or Sigmoid) to add non-linearity:
+     $$a_j = \text{Activation}(z_j)$$
+
+3. **Output & Prediction**
+   * The final layer outputs the model's prediction ($\hat{y}$).
+
+4. **Loss Computation**
+   * The prediction ($\hat{y}$) is compared to the true label ($y$) to measure error:
+     $$\text{Loss} = (\hat{y} - y)^2$$
+
+5. **Backward Pass (Backpropagation)**
+   * Calculus (the chain rule) runs backward from the loss to calculate gradients for every parameter:
+     * $\frac{\partial \text{Loss}}{\partial w}$: how much the weight contributed to the error.
+     * $\frac{\partial \text{Loss}}{\partial b}$: how much the bias contributed to the error.
+
+> the "∂" is the partial differential (calculus reference) 
+
+4. **Gradient Descent Update**
+   * The optimizer nudges each weight and bias in the opposite direction of the error:
+     $$w_{\text{new}} = w_{\text{old}} - (\text{Learning Rate} \times \frac{\partial \text{Loss}}{\partial w})$$
+     $$b_{\text{new}} = b_{\text{old}} - (\text{Learning Rate} \times \frac{\partial \text{Loss}}{\partial b})$$
+
+7. **Iterate**
+   * Repeat steps 2 through 6 across training batches and epochs until the loss stabilizes at a minimum.

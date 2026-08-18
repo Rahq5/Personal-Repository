@@ -7,7 +7,7 @@ and it's only to answer questions related to feeding RAG with data and making it
   
 - if RAG was initially the heaviest types of AI that it cant be deployed to public like parametric AIs, how does Gemini's success to make thier own RAG which is the search AI gemini and being deployed globally: ??? 
 
-- how would RAG answer better then parametric AIs ?: simply by providing relevant information to the query. as example: 
+- how would RAG answer better  then parametric AIs ?: simply by providing relevant information to the query. as example: 
 	- given the query “Can Acme’s fancy-printer-A300 print 100pps?”, the model will be able to respond better if it’s given the specifications of fancy-printerA300
 
 - what the book means by construct context that RAG uses?: using the same context would lead the AI to re-read the 50 docs again and again but using construct context for each query would first grab the most N relevant (in context) docs then build the answer on these retrieved docs.

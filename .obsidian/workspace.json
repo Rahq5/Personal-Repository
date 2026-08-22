@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Notes&Guides/Linux/Establishing_SSH_to_Server.md",
+                "file": "Notes&Guides/Springboot Notes&Guides/SpringBoot Revising.md",
                 "mode": "source",
-                "source": true
+                "source": false
               },
               "icon": "lucide-file",
-              "title": "Establishing_SSH_to_Server"
+              "title": "SpringBoot Revising"
             }
           }
         ]
@@ -78,7 +78,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 248.5
+    "width": 248.5,
+    "collapsed": true
   },
   "right": {
     "id": "1042ef4502a369b6",
@@ -158,7 +159,7 @@
               "state": {
                 "file": "Notes&Guides/Springboot Notes&Guides/SpringBoot Revising.md",
                 "followCursor": false,
-                "showSearch": false,
+                "showSearch": true,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
@@ -186,6 +187,10 @@
   },
   "active": "19b39c492fcb1dc4",
   "lastOpenFiles": [
+    "DBs.md",
+    "README.md",
+    "Notes&Guides/Springboot Notes&Guides/SpringBoot Revising.md",
+    "Notes&Guides/Linux/Establishing_SSH_to_Server.md",
     "Notes&Guides/Linux/Linux-cheat-sheet/Linux-cheat-sheet.md",
     "Notes&Guides/Linux/Linux-cheat-sheet/~",
     "Notes&Guides/Linux/Linux-cheat-sheet/images/permissions.png",
@@ -196,9 +201,6 @@
     "Notes&Guides/Linux/Linux-cheat-sheet.md",
     "Notes&Guides/Linux/README.md",
     "Notes&Guides/README.md",
-    "Notes&Guides/Linux/Establishing_SSH_to_Server.md",
-    "Notes&Guides/Linux/GitHub SSH Key Setup.md",
-    "Notes&Guides/Springboot Notes&Guides/SpringBoot Revising.md",
-    "Notes&Guides/Springboot Notes&Guides/SpringBoot Revising.md"
+    "Notes&Guides/Linux/GitHub SSH Key Setup.md"
   ]
 }

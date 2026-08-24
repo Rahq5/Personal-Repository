@@ -4,35 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "39aec1765ac42700",
+        "id": "54b46ad389f689b9",
         "type": "tabs",
         "children": [
           {
-            "id": "ac8945a45a557dca",
+            "id": "e411d3ac5aafc895",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "RAG_and_AI/Revising research paper 1.md",
+                "file": "Linux/LinuxProblemFix/linux-audio-autoswitch-problem-report.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Revising research paper 1"
-            }
-          },
-          {
-            "id": "3c18042a044efdea",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "RAG_and_AI/Revising research paper 1.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Revising research paper 1"
+              "title": "linux-audio-autoswitch-problem-report"
             }
           }
         ]
@@ -172,7 +158,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "RAG_and_AI/Revising research paper 1.md",
+                "file": "Linux/LinuxProblemFix/linux-audio-autoswitch-problem-report.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -208,22 +194,36 @@
       "canvas:Create new canvas": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
-      "command-palette:Open command palette": false
+      "command-palette:Open command palette": false,
+      "workspaces:Manage workspace layouts": false,
+      "markdown-importer:Open format converter": false,
+      "drawio-editor:Create new drawio diagram": false
     }
   },
-  "active": "ac8945a45a557dca",
+  "active": "e411d3ac5aafc895",
   "lastOpenFiles": [
+    "Linux/LinuxProblemFix/audio-dummy-output-fix.md",
+    "Linux/LinuxProblemFix/Unconfirmed 874193.crdownload",
+    "RAG_DiagramsForLEAP.drawio",
+    "Linux/LinuxProblemFix/linux-audio-autoswitch-problem-report.md",
+    "RAG_and_AI/AI full search.md",
     "RAG_and_AI/2409.02111v1.pdf",
     "RAG_and_AI/Revising research paper 1.md",
     "RAG_and_AI/Neural_Network&Transformer.md",
-    "RAG_and_AI/Efficient Estimation of Word Representations in Vector Space.pdf",
     "RAG_and_AI/RAG Notes 2.md",
+    "RAG_and_AI/RAG Notes.md",
+    "DailyReports/CCSP_DailyReports/2026-08-23.md",
+    "SpringBoot-FileUpload-Streaming-Guide.md",
+    "RAG_and_AI/diagram/AI_Tree.drawio",
+    "DailyReports/CCSP_DailyReports/2026-07-27.md",
+    "DailyReports/LeapDailyReports/Leap daily reports.md",
+    "DailyReports/LeapDailyReports/2026-08-23.md",
+    "DailyReports/CCSP_DailyReports/2026-08-18.md",
+    "RAG_and_AI/diagram",
+    "RAG_and_AI/Efficient Estimation of Word Representations in Vector Space.pdf",
     "Efficient Estimation of Word Representations in Vector Space.md",
     "RAG_and_AI/1301.3781v3.pdf",
-    "RAG_and_AI/RAG Notes.md",
-    "DailyReports/2026-08-18.md",
     "DailyReports/CCSP_DailyReports/2026-08-12.md",
-    "DailyReports/LeapDailyReports/Leap daily reports.md",
     "DailyReports/LeapDailyReports/17-08-2026.md",
     "DailyReports/LeapDailyReports/16-08-2026.md",
     "DailyReports/LeapDailyReports/13-08-2026.md",
@@ -235,15 +235,9 @@
     "asd;ml.md",
     "Node.js/JS Concepts.md",
     "LeapWork_(dont push)/exploring shoura.md",
-    "SpringBoot-FileUpload-Streaming-Guide.md",
-    "LeapWork_(dont push)/intern_assignment_legal_crawler.md",
     "LeapWork_(dont push)",
-    "LeapWork_(dont push)/Explaining Musheer diagram.md",
     "RAG_and_AI/images/Screenshot From 2026-08-09 17-30-13.png",
     "RAG_and_AI/images",
-    "Linux/raspi/bugsAndFixes/rpi-headless-setup-report.md",
-    "Linux/quickGuides/Linux-cheat-sheet.md",
-    "Linux/quickGuides/gh_GithubFromCli_CheatSheet.md",
     "Kaust-Python/media/Screenshot From 2025-12-11 16-14-01.png",
     "Kaust-Python/media/Screenshot From 2025-12-11 15-28-03.png",
     "Kaust-Python/media/Screenshot From 2025-11-27 14-08-59.png",
@@ -251,11 +245,7 @@
     "Kaust-Python/media/Pasted image 20251118214858.png",
     "Kaust-Python/media/Pasted image 20251118214808.png",
     "Untitled.canvas",
-    "RAG_DiagramsForLEAP.drawio",
     "RAG_and_AI",
-    "DailyReports/LeapDailyReports",
-    "DailyReports",
-    "DailyReports/template",
     "Screenshot From 2026-02-01 08-44-07.png",
     "Rawi_s Notes/expermints and quesions/numberEncoderFlowProcessDiagram.drawio.png",
     "Kaust-Python Notes and Guide/Python-Learning/media/Screenshot From 2025-11-27 14-08-59.png"

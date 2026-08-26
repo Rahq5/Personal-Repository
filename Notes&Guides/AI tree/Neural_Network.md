@@ -1,5 +1,8 @@
 # intro 
-this section will be about learning neural network and transformers 
+this section will be about learning neural network and below:
+- Transformer
+- RNN
+- Generative AI
 
 
 # Define
@@ -118,3 +121,23 @@ really it's just iterating all of that over and over to get less wrong predictio
 
 7. **Iterate**
    * Repeat steps 2 through 6 across training batches and epochs until the loss stabilizes at a minimum.
+
+# Generative AI 
+## Intro
+Generative AI is a new application under NN that produces brand new content like text, images or music
+
+- **What makes Gen AI comes under NN?:** Neural network is a mathimatical architecture made of interconnected nodes, while GenAI is a goal app or category of further goal apps (like parametric and RAG)
+
+to see full details visit this file [[Generative AI]]
+## How Gen AI works?
+Gen Ai operates in three phases:
+- **Training:** to create foundation model that can serve the basis of multiple gen AI apps
+- **Tuning:** to focus the model into specific  smaller dataset
+- **Generation,evaluation and retuning**:to assess the gen AI application's output and continually improve its quality and accuracy.
+
+
+
+# Architectures
+
+
+# Media-type models

@@ -4,24 +4,81 @@
     "type": "split",
     "children": [
       {
-        "id": "54b46ad389f689b9",
+        "id": "d26aebc4cf9ee0e6",
         "type": "tabs",
         "children": [
           {
-            "id": "e411d3ac5aafc895",
+            "id": "48dcd82483f298bd",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux/LinuxProblemFix/linux-audio-autoswitch-problem-report.md",
+                "file": "AI tree/Generative AI.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "linux-audio-autoswitch-problem-report"
+              "title": "Generative AI"
+            }
+          },
+          {
+            "id": "ed18bed2c94efdee",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "AI tree/Machine learning.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Machine learning"
+            }
+          },
+          {
+            "id": "d23158b337092c9c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "AI tree/Neural_Network.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Neural_Network"
+            }
+          },
+          {
+            "id": "d6fc6bb867f07e26",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "AI tree/AI_Root.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "AI_Root"
+            }
+          },
+          {
+            "id": "b918d5267032905b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "LLM.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "LLM"
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -41,7 +98,7 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "byCreatedTimeReverse",
-                "autoReveal": false,
+                "autoReveal": true,
                 "showSearch": false,
                 "searchQuery": ""
               },
@@ -158,7 +215,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux/LinuxProblemFix/linux-audio-autoswitch-problem-report.md",
+                "file": "AI tree/AI_Root.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -195,25 +252,29 @@
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
-      "workspaces:Manage workspace layouts": false,
-      "markdown-importer:Open format converter": false,
       "drawio-editor:Create new drawio diagram": false
     }
   },
-  "active": "e411d3ac5aafc895",
+  "active": "d6fc6bb867f07e26",
   "lastOpenFiles": [
+    "AI tree/Generative AI.md",
+    "LLM.md",
+    "AI tree/Neural_Network.md",
+    "AI tree/RAG Notes.md",
+    "AI tree/Machine learning.md",
+    "AI tree/RAG Notes 2.md",
+    "AI tree/Natural Language Processing.md",
+    "AI tree/AI_Root.md",
+    "AI tree",
+    "DailyReports/CCSP_DailyReports/2026-08-25.md",
+    "RAG_DiagramsForLEAP.drawio",
+    "Springboot Notes&Guides/SpringBoot-FileUpload-Streaming-Guide.md",
+    "Linux/LinuxProblemFix/linux-audio-autoswitch-problem-report.md",
     "Linux/LinuxProblemFix/audio-dummy-output-fix.md",
     "Linux/LinuxProblemFix/Unconfirmed 874193.crdownload",
-    "RAG_DiagramsForLEAP.drawio",
-    "Linux/LinuxProblemFix/linux-audio-autoswitch-problem-report.md",
-    "RAG_and_AI/AI full search.md",
     "RAG_and_AI/2409.02111v1.pdf",
     "RAG_and_AI/Revising research paper 1.md",
-    "RAG_and_AI/Neural_Network&Transformer.md",
-    "RAG_and_AI/RAG Notes 2.md",
-    "RAG_and_AI/RAG Notes.md",
     "DailyReports/CCSP_DailyReports/2026-08-23.md",
-    "SpringBoot-FileUpload-Streaming-Guide.md",
     "RAG_and_AI/diagram/AI_Tree.drawio",
     "DailyReports/CCSP_DailyReports/2026-07-27.md",
     "DailyReports/LeapDailyReports/Leap daily reports.md",
@@ -230,11 +291,6 @@
     "DailyReports/LeapDailyReports/12-08-2026.md",
     "DailyReports/LeapDailyReports/11-08-2026.md",
     "DailyReports/LeapDailyReports/10-08-2026.md",
-    "DailyReports/LeapDailyReports/09-08-2026.md",
-    "DailyReports/LeapDailyReports/06-08-2026.md",
-    "asd;ml.md",
-    "Node.js/JS Concepts.md",
-    "LeapWork_(dont push)/exploring shoura.md",
     "LeapWork_(dont push)",
     "RAG_and_AI/images/Screenshot From 2026-08-09 17-30-13.png",
     "RAG_and_AI/images",
@@ -245,7 +301,6 @@
     "Kaust-Python/media/Pasted image 20251118214858.png",
     "Kaust-Python/media/Pasted image 20251118214808.png",
     "Untitled.canvas",
-    "RAG_and_AI",
     "Screenshot From 2026-02-01 08-44-07.png",
     "Rawi_s Notes/expermints and quesions/numberEncoderFlowProcessDiagram.drawio.png",
     "Kaust-Python Notes and Guide/Python-Learning/media/Screenshot From 2025-11-27 14-08-59.png"

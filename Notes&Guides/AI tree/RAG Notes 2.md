@@ -1,4 +1,4 @@
-this notes taken from [hands on RAG for production] 
+
 here is where to dive 
 
 
@@ -66,7 +66,7 @@ here is where to dive
 
 
 # Base of RAG stacks 
-here am writing what i missed in [[RAG Notes]] 
+here am writing what i missed in RAG Notes 
 
 ## Document parsing 
 - **what is Document parsing?**:

@@ -2,7 +2,7 @@
 this section will be about learning neural network and below:
 - Transformer
 - RNN
-- Generative AI
+- Generative AI h
 
 
 # Define

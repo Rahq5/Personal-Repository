@@ -141,6 +141,12 @@ Gen Ai operates in three phases:
 
 ## Transformer
 
+### Brief Definition
+In a nutshell, what does a transformer do?
+Imagine that you’re writing a text message on your phone. After each word, you may get three words suggested to you. For example, if you type “Hello, how are”, the phone may suggest words such as “you”, or “your” as the next word. Of course, if you continue selecting the suggested word in your phone, you’ll quickly find that the message formed by these words makes no sense. If you look at each set of 3 or 4 consecutive words, it may make sense, but these words don’t concatenate to anything with a meaning. This is because the model used in the phone doesn’t carry the overall context of the message, it simply predicts which word is more likely to come up after the last few. Transformers, on the other hand, keep track of the context of what is being written, and this is why the text that they write makes sense.
+
+to head to full article click this --> [[Transformer Architecture]]
+
 ## Diffusion model
 explain the difference between it and the by media-type one
 ## GAN

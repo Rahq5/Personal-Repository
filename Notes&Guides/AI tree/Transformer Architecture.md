@@ -145,9 +145,88 @@ A regular feedforward network takes one input vector and passes it through layer
 
 ## Add & Norm (Residual Connections and Layer Normalization)****
 
-## Embeddings
+**Add & Norm** is a two-step operation applied after every sub-layer in a transformer block (Multi-Head Attention, Masked Multi-Head Attention, or Feed Forward).
 
+**1. Add (Residual Connection)**  
+The original input `x` going into the sub-layer is added directly to that sub-layer's output:  
+`x + SubLayer(x)`  
+This keeps the original signal alive instead of letting the sub-layer's transformation fully overwrite it. It also gives gradients (the training signal computed during backpropagation) a direct shortcut path back through the network, which prevents them from shrinking to near-zero across many stacked layers — a problem called **vanishing gradients**.
+
+**2. Norm (Layer Normalization)**  
+The _result_ of that addition — `x + SubLayer(x)` — is then rescaled so its values have a stable mean and variance. This is what keeps numbers from growing unstably as they pass through N repeated blocks, and it speeds up and stabilizes training.
+
+**Put together:**  
+`Output = LayerNorm(x + SubLayer(x))`
+
+It happens once per sub-layer — so the encoder has 2 per block, the decoder has 3 (since it has an extra cross-attention sub-layer).
+
+
+## Embeddings
+Transformers cannot work with raw words as they need numbers. So, each input token (word or subword) is converted into a vector, called an [[RAG Notes#RAG with Embedding-based retrievals|Embeddings]].
+
+- Both encoder input tokens and decoder input tokens are converted into embeddings.
+- These embeddings are trainable, meaning the model learns the best numeric representation for each token.
+- The same weight matrix is shared for Encoder embeddings, Decoder embeddings and the final linear layer before [softmax](https://www.geeksforgeeks.org/deep-learning/the-role-of-softmax-in-neural-networks-detailed-explanation-and-applications/)
+- The embeddings are scaled by model to keep values stable before adding positional encoding.
+
+ 
+ - **what is the nature of data enters the embedding part since embedding is transforming strings into vectors?**:
+	   after the raw text got tokenized, tokenizing is actually splitting words and sub-words and replacing them with a token ID, then these token IDs enters the embedding, some sort of "embedding matrix map" thing then you get that embedding vector 
+ 
 ## Encoder-Decoder Architecture
+The encoder-decoder structure is key to transformer models. The encoder processes the input sequence into a vector, while the decoder converts this vector back into a sequence. Each encoder and decoder layer includes self-attention and feed-forward layers.
+
+>Note: "input sequence" is actually that sequence of tokens
+### Understanding Encoder-Decoder
+The encoder-decoder model is a neural network used for tasks where both input and output are sequences. It is commonly applied in areas like translation, summarization and speech processing.
+
+- The encoder processes the input sequence and converts it into a fixed representation (context vector)
+- The decoder uses this representation to generate the output sequence step by step
+- Works well for tasks where input and output lengths are different
+
+
+- **Encoder**:
+	  The encoder processes the input sequence and converts it into a fixed representation (context vector) using an RNN or LSTM.
+	  - Processes input tokens sequentially and updates hidden states
+	  - Captuers relations between words in the sequence
+	  - produces final hidden and cell states forming the context vector
+
+- **Decoder**:
+	  The decoder uses the context vector from the encoder to generate the output sequence step by step.
+	  - takes previous outputs and context vector from encoder to predict next token
+	  - generates output sequentially until an end token is reached
+	  - initializes its states using the encoder's final states
+
+#### Working of Encoder-Decoder model:
+
+**Step 1: Tokenizing the Input Sentence**
+- The sentence "I am learning AI" is first broken into tokens: ["I", "am", "learning", "AI"].
+- Each word (token) is converted into a vector that a machine can understand. This process is called embedding.
+
+**Step 2: Encoding the Input**
+- The encoder processes these embeddings sequentially using an LSTM network.
+- At each step, it updates its hidden state based on the current word and previous context. This helps the model understand the sequence order and relationships between words.
+- After processing the full sentence, the encoder generates a context vector (final hidden and cell states), which represents the meaning of the entire input sentence.
+
+**Step 3: Passing the Context to the Decoder**
+- The Context Vector is passed to the Decoder as shown in image.
+- It acts like a summary of the full input sentence.
+
+**Step 4: Decoder Generates Output Step-by-Step**
+- The Decoder uses the context and starts creating the output one word at a time.
+- First it predicts the first word then uses that to predict the second word and so on.
+
+**Step 5: Attention Mechanism**
+- Basic encoder-decoder uses a single context vector, which can limit performance for long sequences.
+- Attention mechanism helps the decoder focus on different parts of the input at each step.
+- Improves accuracy by not relying only on one fixed representation.
+
+**Step 6: Producing the Final Output**
+- The decoder continues generating until the full translated sentence is produced.
+- Each output token depends on the previous ones and the input context. You finally see the output tokens generated on the right side of the diagram completing the translation.
+
+
+
 # Parts of Transformer
 it has 4 main parts:
 - Tokenization

@@ -108,6 +108,22 @@ Positional encoding is a technique that adds information about the position of e
 
 	- **Odd dimensions ($2i + 1$):**
   $$PE_{(\text{pos},\, 2i+1)} = \cos\left(\frac{\text{pos}}{10000^{\frac{2i}{d_{\text{model}}}}}\right)$$
+  **What each part means:**
+
+- **`pos`** — The token's position in the sequence, starting from 0 (e.g., "The" = 0, "cat" = 1, "sat" = 2...).
+  
+- **`i`** — The dimension-pair index inside the positional vector. Each `i` produces **two** output values: one sine (even slot `2i`) and one cosine (odd slot `2i+1`). So `i = 0` fills slots 0 and 1, `i = 1` fills slots 2 and 3, and so on.
+  
+- **`d_model`** — The total size (dimensionality) of the embedding vector for the whole model (e.g., 512). This is a fixed constant set when the model is built, same for every word.
+  
+- **`10000`** — A fixed constant (chosen empirically by the original authors) that controls the overall range of wave frequencies. It doesn't change with position or dimension — it's just a "scale knob" baked into the formula.
+  
+- **`10000^(2i/d_model)`** — This whole term is the **wavelength divisor**. As `i` increases (later dimensions), this number grows larger, which makes `pos` divided by it smaller, which makes the sine/cosine wave oscillate **slower**. So low dimensions (`i` near 0) = fast-changing waves, high dimensions (`i` near d_model/2) = slow-changing waves.
+  
+- **`sin(...)` / `cos(...)`** — Standard trigonometric functions (oscillate smoothly between -1 and 1). Using both (not just one) means each position gets a value pair that behaves predictably as position increases, which is what makes the "distance" between positions mathematically meaningful to the model.
+
+**Why mixing fast + slow waves matters:** with only one wave speed, positions could repeat the same output pattern (a cat sitting far apart in the sequence might get numbers identical to a much closer position). Layering many wave speeds together — fast ones for fine-grained distinction between nearby words, slow ones for distinguishing far-apart positions — gives every position in the sequence a **unique combination** across all dimensions, even for very long sequences.
+  
   am not gonna dive in the details but the core point from this is:
   ```
   "Positional encoding gives each word a unique numerical fingerprint based on its position, built from overlapping fast and slow sine/cosine waves, so the model can tell word order apart even though it processes every word in parallel."
@@ -127,6 +143,11 @@ A regular feedforward network takes one input vector and passes it through layer
 - **Why "position-wise" instead of processing all positions together:** 
 	  since attention already handled the cross-word mixing, the FFN doesn't need to see other positions at all — keeping it independent per position makes it computationally simple (can run in parallel across all positions) and keeps its role clearly separate from attention's role.
 
+## Add & Norm (Residual Connections and Layer Normalization)****
+
+## Embeddings
+
+## Encoder-Decoder Architecture
 # Parts of Transformer
 it has 4 main parts:
 - Tokenization

@@ -148,11 +148,23 @@ Imagine that you’re writing a text message on your phone. After each word, you
 to head to full article click this --> [[Transformer Architecture]]
 
 ## Diffusion model
+### Brief Definition
 explain the difference between it and the by media-type one
+
+Diffusion models are a type of generative AI that create realistic data—like images, audio, or text—by starting from random noise and gradually refining it into a meaningful output
+
+to read more [[Diffusion model]]
 ## GAN
+### Brief Definition
+
+
+to read more click [[GAN Architechture]]
 
 ## Encode \ Decode
+### Brief Definition
+An **encoder** converts standard data into a compressed or coded format, while a **decoder** does the exact opposite by translating that coded data back into its original, readable form
 
+to read more click [[Encoder-Decoder Architecture]]
 
 # Media-type models
 here am gonna discuss some media type models , some of them maybe used for multiple things rather than the media type i labeled them 

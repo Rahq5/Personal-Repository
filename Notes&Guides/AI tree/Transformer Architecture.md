@@ -177,6 +177,8 @@ Transformers cannot work with raw words as they need numbers. So, each input tok
 The encoder-decoder structure is key to transformer models. The encoder processes the input sequence into a vector, while the decoder converts this vector back into a sequence. Each encoder and decoder layer includes self-attention and feed-forward layers.
 
 >Note: "input sequence" is actually that sequence of tokens
+
+to read more click this [[Encoder-Decoder Architecture]]
 ### Understanding Encoder-Decoder
 The encoder-decoder model is a neural network used for tasks where both input and output are sequences. It is commonly applied in areas like translation, summarization and speech processing.
 
@@ -225,6 +227,13 @@ The encoder-decoder model is a neural network used for tasks where both input an
 - The decoder continues generating until the full translated sentence is produced.
 - Each output token depends on the previous ones and the input context. You finally see the output tokens generated on the right side of the diagram completing the translation.
 
+## Softmax Layer for Output Prediction
+
+After the decoder processes the sequence, it must predict the next token.
+
+- The decoder output is passed through a linear layer (whose weights are shared with embeddings).
+- Then the softmax function converts these scores into probabilities.
+- The token with the highest probability becomes the predicted next word.
 
 
 # Parts of Transformer
@@ -237,13 +246,3 @@ it has 4 main parts:
 
 > Note: for you, all the parts are easy to understand or you know it already but not for Transformer block
 
-
-
-## Defining Core concepts
-
-## Defining parts of transformer
-- **Tokenization:** 
-	  is the part where sentences gets split (words, punctuation, prefix,etc..) and then converted to numerical values where they can input to neural networks.
-
-- **Embeddings**:
-	  

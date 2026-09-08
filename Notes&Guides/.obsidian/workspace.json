@@ -4,35 +4,35 @@
     "type": "split",
     "children": [
       {
-        "id": "23bf22123949f790",
+        "id": "c48d563643ce25b6",
         "type": "tabs",
         "children": [
           {
-            "id": "2964a05ab752a03e",
+            "id": "589b71654195b77a",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI tree/Neural_Network.md",
+                "file": "DailyReports/LeapDailyReports/2026-08-25.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Neural_Network"
+              "title": "2026-08-25"
             }
           },
           {
-            "id": "48ee10bf56b8ab1c",
+            "id": "c86884359e266c0c",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI tree/Diffusion model.md",
+                "file": "Springboot Notes&Guides/SpringBoot Revising.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Diffusion model"
+              "title": "SpringBoot Revising"
             }
           }
         ],
@@ -75,7 +75,7 @@
                 "explainSearch": false,
                 "collapseAll": false,
                 "extraContext": false,
-                "sortOrder": "alphabetical"
+                "sortOrder": "byModifiedTime"
               },
               "icon": "lucide-search",
               "title": "Search"
@@ -109,7 +109,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 363.2313537597656
   },
   "right": {
     "id": "af6e662e9ade4ceb",
@@ -173,10 +173,10 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "AI tree/Diffusion model.md",
+                "file": "Springboot Notes&Guides/SpringBoot Revising.md",
                 "followCursor": false,
                 "showSearch": true,
-                "searchQuery": ""
+                "searchQuery": "LL"
               },
               "icon": "lucide-list",
               "title": "Outline"
@@ -199,7 +199,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 460.791015625
+    "width": 312.7276611328125
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -213,45 +213,46 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "48ee10bf56b8ab1c",
+  "active": "c86884359e266c0c",
   "lastOpenFiles": [
-    "AI tree/GAN Architechture.md",
-    "AI tree/Diffusion model.md",
-    "AI tree/Neural_Network.md",
-    "AI tree/AI_Root.md",
-    "DailyReports/CCSP_DailyReports/2026-09-06.md",
-    "Springboot Notes&Guides/SpringBoot Revising.md",
-    "DailyReports/LeapDailyReports/10-08-2026.md",
-    "AI tree/Transformer Architecture.md",
-    "AI tree/Encoder-Decoder Architecture.md",
-    "DailyReports/CCSP_DailyReports/2026-09-01.md",
-    "AI tree/RAG Notes.md",
-    "LeapWork_(dont push)/RAG_DiagramsForLEAP.drawio",
-    "AI tree/images/Screenshot From 2026-08-09 17-30-13.png",
-    "AI tree/images/2409.02111v1.pdf",
-    "AI tree/images",
-    "RAG_and_AI/images/2409.02111v1.pdf",
-    "AI tree/diagram/AI_Tree.drawio",
-    "AI tree/diagram",
-    "AI tree/Natural Language Processing.md",
-    "LLM.md",
-    "AI tree/Generative AI.md",
-    "AI tree/Machine learning.md",
-    "RAG_DiagramsForLEAP.drawio",
-    "AI tree/RAG Notes 2.md",
-    "AI tree",
-    "DailyReports/CCSP_DailyReports/2026-08-25.md",
-    "Springboot Notes&Guides/SpringBoot-FileUpload-Streaming-Guide.md",
-    "Linux/LinuxProblemFix/linux-audio-autoswitch-problem-report.md",
-    "Linux/LinuxProblemFix/audio-dummy-output-fix.md",
-    "Linux/LinuxProblemFix/Unconfirmed 874193.crdownload",
-    "RAG_and_AI/2409.02111v1.pdf",
-    "RAG_and_AI/Revising research paper 1.md",
-    "DailyReports/CCSP_DailyReports/2026-08-23.md",
-    "DailyReports/CCSP_DailyReports/2026-07-27.md",
     "DailyReports/LeapDailyReports/Leap daily reports.md",
     "DailyReports/LeapDailyReports/2026-08-23.md",
-    "DailyReports/CCSP_DailyReports/2026-08-18.md",
+    "DailyReports/LeapDailyReports/2026-08-25.md",
+    "DailyReports/LeapDailyReports/2026-08-24.md",
+    "DailyReports/template/2026-07-25.md",
+    "DailyReports/LeapDailyReports/2026-09-07.md",
+    "DailyReports/LeapDailyReports/2026-09-06.md",
+    "DailyReports/LeapDailyReports/2026-09-03.md",
+    "DailyReports/LeapDailyReports/2026-09-02.md",
+    "DailyReports/LeapDailyReports/2026-09-01.md",
+    "DailyReports/LeapDailyReports/2026-08-31.md",
+    "DailyReports/LeapDailyReports/2026-08-30.md",
+    "DailyReports/LeapDailyReports/2026-08-26.md",
+    "AI tree/LLM.md",
+    "AI tree/Transformer Architecture.md",
+    "AI tree/Encoder-Decoder Architecture.md",
+    "Screen Recording 2025-08-25 152752.mp4.md",
+    "Revising tawsiah/Profile (Coupled to User).md",
+    "AI tree/Neural_Network.md",
+    "AI tree/TableOfContent.md",
+    "AI tree/images/2409.02111v1.pdf",
+    "AI tree/images/Screenshot From 2026-08-09 17-30-13.png",
+    "AI tree/diagram/WholeAITree.png",
+    "AI tree/diagram/AI_Tree.drawio",
+    "AI tree/Unconfirmed 693432.crdownload",
+    "AI tree.zip",
+    "DailyReports/CCSP_DailyReports/2026-09-07.md",
+    "Springboot Notes&Guides/SpringBoot Revising.md",
+    "AI tree/Diffusion model.md",
+    "AI tree/GAN Architechture.md",
+    "AI tree/AI_Root.md",
+    "DailyReports/CCSP_DailyReports/2026-09-06.md",
+    "LeapWork_(dont push)/RAG_DiagramsForLEAP.drawio",
+    "AI tree/images",
+    "RAG_and_AI/images/2409.02111v1.pdf",
+    "AI tree/diagram",
+    "RAG_DiagramsForLEAP.drawio",
+    "AI tree",
     "RAG_and_AI/images/Screenshot From 2026-08-09 17-30-13.png",
     "Kaust-Python/media/Screenshot From 2025-12-11 16-14-01.png",
     "Kaust-Python/media/Screenshot From 2025-12-11 15-28-03.png",
@@ -260,7 +261,6 @@
     "Kaust-Python/media/Pasted image 20251118214858.png",
     "Kaust-Python/media/Pasted image 20251118214808.png",
     "Untitled.canvas",
-    "Screenshot From 2026-02-01 08-44-07.png",
-    "Rawi_s Notes/expermints and quesions/numberEncoderFlowProcessDiagram.drawio.png"
+    "Screenshot From 2026-02-01 08-44-07.png"
   ]
 }

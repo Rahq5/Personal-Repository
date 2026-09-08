@@ -1742,6 +1742,10 @@ BindingResult.getAllErrors() → collect messages
 ErrorResponse(List<String>) → 400 BAD REQUEST
 ```
 
+
+# Spring Security
+
+
 # SpringBoot Databases
 ## Spring Databases — H2 & JPA Introduction
 

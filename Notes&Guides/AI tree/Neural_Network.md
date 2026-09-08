@@ -231,7 +231,7 @@ While the RNN is processing word N, it can't predict or use word N+1 or N+2, bec
 so it's **Unidirectional**
 means RNN processes the sequence in a fixed order (past->current->future) and not (after future or backward) 
 
-## LLM (Text)
+## CNN (Image)
 
 ### Intro 
 before going in , we have to revise NN basic knowledge
@@ -288,7 +288,14 @@ This is essentially data compression — reduces the array size, cuts computatio
 #### Fully-connected (FC) layer — final decision
 Here, _every_ node connects to _every_ node in the previous layer (unlike conv layers, which only connect local regions). This layer takes all the extracted features and outputs a **probability** per class (e.g., 90% cat, 10% dog) using a **softmax function** — a math function that converts raw numbers into probabilities that sum to 1.
 
-## Diffusion models (Images)
 
-## CNN (Images)
+## LLM (Text)
+
+for more click [[LLM]]
+### Introduction
+Large Language Models (LLMs) are advanced AI systems built on deep neural networks designed to process, understand and generate human-like text.
+
+- LLMs Learn patterns, grammar and context from text and can answer questions, write content, translate languages and many more.
+- By using massive datasets and billions of parameters, LLMs have transformed the way humans interact with technology.
+- Modern LLMs include ChatGPT (OpenAI), Google Gemini, Anthropic Claude, etc.
 

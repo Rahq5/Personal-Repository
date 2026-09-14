@@ -186,3 +186,180 @@ authors = ["Your Name <you@example.com>"]
 - **Package:** is a section heading that indicates that the following statements are configuring a package
 - **Dependencies:** is the start of a section for you to list any of your project’s dependencies
 
+## 02-Building and running cargo
+after cargo got created, you have to build it and run so basically to build the code use this commands:
+```bash
+cd hello_cargo
+cargo build
+```
+outputs:
+```bash
+ Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.00s
+```
+
+here you will get a new file under this path which is the binary (executable) file `hello_cargo/target/`.
+generating a binary file means this file can be handed to any processor and it will execute it even if rust wasnt installed on that machine, not likely with python and javascript that requires for these languages to be pre-installed
+
+now to run the binary file type this command:
+```bash
+./target/debug/hello_cargo
+```
+output:
+```bash
+Hello, world!
+```
+
+also to build and run in the same time just hit 
+```bash
+cargo run 
+```
+outputs:
+```bash
+ Compiling rust_project v0.1.0 (/home/rahq05/vscode_expermints/Rust/rust_project)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running `target/debug/rust_project`
+
+Hello, world!
+```
+
+
+
+# 05-Building_GuessingGame
+## 01-Building_code
+```rust
+use std::io; // import I/O library from standard library
+
+fn main() {
+    println!("guess the number! ");
+    println!("plz input your number: ");
+
+    let mut guess = String::new(); // mutable empty String
+
+    io::stdin()
+        .read_line(&mut guess) // read input into guess by reference
+        .expect("failed to read lines"); // crash with message if Err
+
+    println!("you've guessed: {guess}");
+}
+```
+
+```rust
+use std::io;
+```
+
+- `use`: brings a module/library into scope so its items can be used without writing the full path every time
+- `std::io`: the I/O module from Rust's standard library; handles input/output operations like reading from the terminal
+
+
+```rust
+let mut guess = String::new();
+```
+
+- `let`: declares a new variable
+- `mut`: makes the variable mutable; without it, variables in Rust are immutable by default and cannot be changed after being assigned
+- `String::new()`: creates a new, empty, growable `String`
+
+
+```rust
+io::stdin()
+```
+
+- `io::stdin()`: calls the function that returns a handle to standard input, meaning access to what's typed in the terminal
+
+
+```rust
+.read_line(&mut guess)
+```
+
+- `.read_line(...)`: reads a line of input from stdin and appends it into the given `String`
+- `&mut guess`: passes a mutable reference (a pointer) to `guess` instead of the whole `String`; this avoids copying the full data into the function, and instead lets `read_line` access and modify the same memory directly
+
+
+```rust
+.expect("failed to read lines");
+```
+
+- `.expect(...)`: a method on `Result`, which can be `Ok` (operation succeeded) or `Err` (operation failed, usually carrying a message explaining what went wrong)
+- if the `Result` is `Err`, `.expect()` crashes the program and prints the message passed to it
+
+
+```rust
+println!("you've guessed: {guess}");
+```
+
+- `println!`: macro that prints text to the terminal followed by a newline
+- `{guess}`: inserts the current value of the `guess` variable directly into the printed string
+
+## 02-Random numbers (adding dependencies using crates)
+
+**crate:** is a collection of rust source code files 
+
+here where cargo's actually shines , you're now about to add your first ever dependency.
+go to `cargo.toml` under `[dependencies]` and add this line which end up like this:
+```rust 
+[dependencies]
+rand = "0.8.5"
+```
+
+then hit this command to see the crate actually gets added:
+```shell
+crate build
+```
+output:
+```shell
+rahq05@RawiUbuntuPC:~/vscode_expermints/Rust/guessing_game$ cargo build 
+   Compiling libc v0.2.189
+   Compiling cfg-if v1.0.4
+   Compiling zerocopy v0.8.57
+   Compiling getrandom v0.2.17
+   Compiling rand_core v0.6.4
+   Compiling ppv-lite86 v0.2.21
+   Compiling rand_chacha v0.3.1
+   Compiling rand v0.8.8
+   Compiling guessing_game v0.1.0 (/home/rahq05/vscode_expermints/Rust/guessing_game)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2.20s
+```
+
+## 03-Generating_Random_Numbers
+here am gonna add a new line of code to the original one which is:
+```rust
+use std::io; // import I/O library from standard library
+use rand::Rng; //importing random library
+
+fn main() {
+    println!("guess the number! ");
+    println!("plz input your number: ");
+
+    let mut guess = String::new(); // mutable empty String
+    
+    // the new part vvv
+    let secret_num = rand::thread_rng().gen_range(1..=100);
+
+    io::stdin()
+        .read_line(&mut guess) // read input into guess by reference
+        .expect("failed to read lines"); // crash with message if Err
+
+    println!("you've guessed: {guess}");
+}
+```
+
+explaining:
+```rust
+let secret_num = rand::thread_rng().gen_range(1..=100);
+```
+
+```rust
+let secret_num =
+```
+- here you made a mutable (unchangeable) variable 
+
+```rust
+rand::thread_rng()
+```
+- function that gives us the particular random number generator we’re going to use: one that is local to the current thread of execution and is seeded by the operating system
+
+```rust
+.gen_range(1..=100);
+```
+- this function takes the range of random number as an argument using this expression `(start..=end)`
+

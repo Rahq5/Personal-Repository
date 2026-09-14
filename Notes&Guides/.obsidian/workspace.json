@@ -201,7 +201,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CTI platform.md",
+                "file": "Rust/01-Introduction_To_Rust.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -227,8 +227,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 312.7276611328125,
-    "collapsed": true
+    "width": 312.7276611328125
   },
   "left-ribbon": {
     "hiddenItems": {

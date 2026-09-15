@@ -227,7 +227,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 312.7276611328125
+    "width": 475.369384765625,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -243,8 +244,13 @@
   },
   "active": "c3b86632033a25d1",
   "lastOpenFiles": [
-    "CTI platform.md",
+    "DailyReports/template/2026-07-25.md",
+    "DailyReports/LeapDailyReports/2026-09-14.md",
+    "DailyReports/LeapDailyReports/Unconfirmed 249582.crdownload",
+    "DailyReports/LeapDailyReports/2026-09-13.md",
+    "DailyReports/LeapDailyReports/Unconfirmed 880765.crdownload",
     "Rust/01-Introduction_To_Rust.md",
+    "CTI platform.md",
     "Rust",
     "AI tree/Encoder-Decoder Architecture.md",
     "AI tree/Diffusion model.md",
@@ -269,16 +275,11 @@
     "SpringBoot/05-Databases/04-Lombok.md",
     "SpringBoot/05-Databases/03-Basic-CRUD-Operations.md",
     "SpringBoot/05-Databases/02-ORM.md",
-    "SpringBoot/05-Databases/01-H2-JPA-Introduction.md",
     "SpringBoot/05-Databases",
     "SpringBoot/04-Spring-Security",
-    "SpringBoot/03-Layered-Architecture/07-Field-Validation-Error-Handling.md",
-    "SpringBoot/03-Layered-Architecture/06-Exception-Handling.md",
     "SpringBoot/03-Layered-Architecture",
     "SpringBoot/02-MVC",
     "SpringBoot/01-Introduction",
-    "SpringBoot",
-    "AI tree/images/2409.02111v1.pdf",
     "AI tree/images/Screenshot From 2026-08-09 17-30-13.png",
     "AI tree/diagram/WholeAITree.png",
     "RAG_and_AI/images/Screenshot From 2026-08-09 17-30-13.png",

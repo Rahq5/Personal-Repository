@@ -363,3 +363,238 @@ rand::thread_rng()
 ```
 - this function takes the range of random number as an argument using this expression `(start..=end)`
 
+## 04-Comparing_guess_with_secret_number
+here you gonna learn about kind of if-condition in rust 
+
+added this bunch of lines:
+
+```rust
+use std::cmp::Ordering;
+use std::io;
+
+use rand::Rng;
+
+fn main() {
+    // --snip--
+
+    println!("You guessed: {guess}");
+
+    match guess.cmp(&secret_number) {
+        Ordering::Less => println!("Too small!"),
+        Ordering::Greater => println!("Too big!"),
+        Ordering::Equal => println!("You win!"),
+    }
+}
+```
+
+this code will give you a mismatched types error since you're comparing `String` (guess) with a number (secret_number):
+
+```bash
+error[E0308]: mismatched types
+  --> src/main.rs:23:21
+   |
+23 |     match guess.cmp(&secret_number) {
+   |                 --- ^^^^^^^^^^^^^^ expected `&String`, found `&{integer}`
+   |                 |
+   |                 arguments to this method are incorrect
+```
+
+to fix it you alter this line:
+
+```rust
+let mut guess = String::new();
+
+io::stdin()
+    .read_line(&mut guess)
+    .expect("Failed to read line");
+
+// this one vvv
+let guess: u32 = guess.trim().parse().expect("Please type a number!");
+
+println!("You guessed: {guess}");
+
+match guess.cmp(&secret_number) {
+    Ordering::Less => println!("Too small!"),
+    Ordering::Greater => println!("Too big!"),
+    Ordering::Equal => println!("You win!"),
+}
+```
+
+explaining:
+
+```rust
+let guess: u32 = guess.trim().parse().expect("Please type a number!");
+```
+
+- `guess.trim()` strips the trailing newline the user's Enter key adds (and `\r` on Windows), leaving just the digits
+- `.parse()` converts the trimmed string into a number type — but `parse` can fail (e.g. if the input isn't a valid number), so it returns a `Result`
+- `: u32` tells Rust exactly which number type to parse into — an unsigned 32-bit integer, a good default for a small positive number. This also makes Rust infer `secret_number` as `u32` too, so both sides of the comparison match
+- `.expect(...)` unwraps the `Result`: crashes with your message if parsing failed (`Err`), returns the number if it succeeded (`Ok`)
+- this shadows the original `guess` (the `String`) with a new `guess` (the `u32`) — same variable name, new type
+
+```rust
+guess.cmp(&secret_number)
+```
+
+- `cmp` is a method that compares two values and can be called on anything comparable
+- it takes a reference to the thing you're comparing against — here, `&secret_number`
+- it returns a variant of the `Ordering` enum: `Less`, `Greater`, or `Equal` — the three possible outcomes of comparing two values
+
+```rust
+match guess.cmp(&secret_number) {
+    Ordering::Less => println!("Too small!"),
+    Ordering::Greater => println!("Too big!"),
+    Ordering::Equal => println!("You win!"),
+}
+```
+
+- `match` takes the value returned by `cmp` and checks it against each arm's pattern in order, top to bottom
+- the first arm whose pattern fits the value is the one that runs — `match` stops there, no fallthrough into the next arm
+
+```rust
+Ordering::Less => println!("Too small!"),
+Ordering::Greater => println!("Too big!"),
+Ordering::Equal => println!("You win!"),
+```
+
+- each of these is an **arm**: a pattern (`Ordering::Less`, etc.) on the left of `=>`, and the code to run if that pattern matches on the right
+- `Ordering` only has 3 possible variants, and all 3 are covered here — if you deleted one (say `Ordering::Equal`), the code wouldn't compile. Rust forces every possible value to be handled; this is called exhaustiveness
+
+full final code for this part:
+```rust
+
+use std::cmp::Ordering;
+use std::io;
+
+use rand::Rng;
+
+fn main() {
+    println!("Guess the number!");
+
+    let secret_number = rand::thread_rng().gen_range(1..=100);
+
+    println!("Please input your guess.");
+
+    let mut guess = String::new();
+
+    io::stdin()
+        .read_line(&mut guess)
+        .expect("Failed to read line");
+
+    let guess: u32 = guess.trim().parse().expect("Please type a number!");
+
+    println!("You guessed: {guess}");
+
+    match guess.cmp(&secret_number) {
+        Ordering::Less => println!("Too small!"),
+        Ordering::Greater => println!("Too big!"),
+        Ordering::Equal => println!("You win!"),
+    }
+}
+```
+
+## 05-Looping
+it just a simple loop braces, rust for some reason uses a while true loop that wont stop until it hit a `break` expression.
+the previous code wont give the user chances to re guess so now am adding a loop for the code.
+the code snippet added:
+```rust
+    // --snip--
+
+    println!("The secret number is: {secret_number}");
+
+    loop { // here it's , just a word and curly braces
+        println!("Please input your guess.");
+
+        // --snip--
+
+        match guess.cmp(&secret_number) {
+            Ordering::Less => println!("Too small!"),
+            Ordering::Greater => println!("Too big!"),
+            Ordering::Equal => println!("You win!"),
+        }
+    }
+}
+```
+
+but now you got into another problem that you cant get out of that loop unless you hit `ctrl+c` but there's another way to "break" out.
+
+it's by simply adding an extra line of code to the equal arm, see the code below:
+```rust
+        // --snip--
+
+        match guess.cmp(&secret_number) {
+            Ordering::Less => println!("Too small!"),
+            Ordering::Greater => println!("Too big!"),
+            
+            // here once it got the equal number , it prints "win" and breaks the loop
+            Ordering::Equal => {
+                println!("You win!");
+                break;
+            }
+        }
+    }
+}
+```
+
+## 06-Handling_invalid_input
+we gonna fix a problem here were the user inputs a non-numeric value would crash the game, so the fix we gonna apply here is to continue 
+
+code snippet to explain:
+```rust
+        // --snip--
+
+        io::stdin()
+            .read_line(&mut guess)
+            .expect("Failed to read line");
+
+        let guess: u32 = match guess.trim().parse() {
+            Ok(num) => num,
+            Err(_) => continue,
+        };
+
+        println!("You guessed: {guess}");
+
+        // --snip--
+
+```
+
+this replaces the old line that used `.expect(...)`, which crashed the program on bad input. Now `match` handles the error instead of crashing.
+explaining:
+```rust
+guess.trim().parse()
+```
+- same as before: `trim()` strips the newline, `parse()` tries to convert the string into a number
+- `parse()` returns a `Result` — an enum with two variants: `Ok` (success, holds the number) and `Err` (failure, holds error info)
+
+
+```rust
+let guess: u32 = match guess.trim().parse() {
+    Ok(num) => num,
+    Err(_) => continue,
+};
+```
+- this is the same `match` pattern used earlier for `Ordering`, but now matching on a `Result` instead
+- two arms, one for each possible variant of `Result`
+
+```rust
+Ok(num) => num,
+```
+
+- if `parse()` succeeded, it returns `Ok` wrapping the parsed number
+- `Ok(num)` is a pattern that **destructures** the `Ok` value, pulling the number out and naming it `num`
+- the arm's code is just `num` — so this arm's value (the number) becomes what `guess` gets assigned
+
+
+```rust
+Err(_) => continue,
+```
+
+- if `parse()` failed (e.g. input was letters, not digits), it returns `Err` wrapping details about what went wrong
+- `_` is the **wildcard pattern** — it matches anything and means "I don't care what's inside this `Err`, match it regardless"
+- `continue` is a loop keyword: it skips the rest of this loop iteration and jumps straight back to the top of the `loop`, asking for another guess
+
+**why this replaces `.expect(...)`:**
+
+- `.expect(...)` on a `Result` crashes the program immediately if the value is `Err`
+- `match` instead lets you decide what happens for each variant — here, `Ok` gives you the number, `Err` just retries instead of crashing
+- net effect: bad input is silently ignored, and the game keeps asking until the user types a valid number

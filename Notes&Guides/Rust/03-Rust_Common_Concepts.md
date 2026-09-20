@@ -479,3 +479,277 @@ fn plus_one(x: i32) -> i32 {
 ```
 
 This causes `error[E0308]: mismatched types` — the function promised `i32` but a statement returns the unit type `()`. Fix: remove the semicolon.
+
+
+# 04-If_Expressions
+**Basic syntax:** `if` branches code based on a condition. Code blocks tied to conditions are called **arms** (same term as `match`).
+```rust
+let number = 3;
+
+if number < 5 {
+    println!("condition was true");
+} else {
+    println!("condition was false");
+}
+```
+
+`else` is optional — if omitted and the condition is false, the program just skips past the `if` block.
+
+**Condition must be `bool` — no truthy/falsy conversion:** unlike Ruby or JavaScript, Rust never auto-converts other types to boolean.
+```rust
+if number {          // ❌ error: expected bool, found integer
+    ...
+}
+```
+
+Fix: be explicit.
+```rust
+if number != 0 {     // ✅ produces an actual bool
+    ...
+}
+```
+
+---
+
+## `else if` — Multiple Conditions
+
+```rust
+if number % 4 == 0 {
+    println!("number is divisible by 4");
+} else if number % 3 == 0 {
+    println!("number is divisible by 3");
+} else if number % 2 == 0 {
+    println!("number is divisible by 2");
+} else {
+    println!("number is not divisible by 4, 3, or 2");
+}
+```
+
+Rust checks each condition **in order** and runs only the **first** one that's true — it doesn't check the rest, even if they'd also be true. (In the example, `6` is divisible by both `3` and `2`, but only the `%3` branch runs.)
+
+Too many `else if` chains → considered messy; Chapter 6 introduces `match` as a cleaner alternative for this.
+
+---
+
+## `if` as an Expression (in a `let` statement)
+
+Since `if` is an _expression_ (not just a control-flow statement), it can appear on the right side of `let`:
+
+```rust
+let condition = true;
+let number = if condition { 5 } else { 6 };
+// number == 5
+```
+
+**Type constraint:** both arms (`if` and `else`) must evaluate to the **same type**, since Rust needs to know `number`'s type at compile time — it can't leave the type undetermined until runtime.
+
+```rust
+let number = if condition { 5 } else { "six" };
+// ❌ error[E0308]: `if` and `else` have incompatible types
+//    (i32 vs &str)
+```
+
+# 05-Repetition_with_loops
+
+Rust has three loop constructs: `loop`, `while`, and `for`.
+
+### loop — runs forever until stopped
+
+**Definition:** the `loop` keyword tells Rust to execute a block of code over and over, either forever or until explicitly told to stop (via `break`).
+
+```rust
+fn main() {
+    loop {
+        println!("again!");
+    }
+}
+```
+
+**Output:**
+
+```
+again!
+again!
+again!
+again!
+^Cagain!
+```
+
+(`^C` = manual interrupt with Ctrl+C — it runs forever otherwise.)
+
+---
+
+#### loop returning a value via `break`
+
+**Definition:** you can put a value after `break` to return that value out of the loop, letting you assign the loop's result to a variable.
+
+```rust
+fn main() {
+    let mut counter = 0;
+
+    let result = loop {
+        counter += 1;
+        if counter == 10 {
+            break counter * 2;
+        }
+    };
+
+    println!("The result is {result}");
+}
+```
+
+**Output:**
+
+```
+The result is 20
+```
+
+---
+
+#### Loop labels — disambiguating nested loops
+
+**Definition:** a label (starting with `'`) lets `break`/`continue` target an outer loop instead of only the innermost one (the default).
+
+```rust
+fn main() {
+    let mut count = 0;
+    'counting_up: loop {
+        println!("count = {count}");
+        let mut remaining = 10;
+
+        loop {
+            println!("remaining = {remaining}");
+            if remaining == 9 {
+                break;
+            }
+            if count == 2 {
+                break 'counting_up;
+            }
+            remaining -= 1;
+        }
+
+        count += 1;
+    }
+    println!("End count = {count}");
+}
+```
+
+**Output:**
+
+```
+count = 0
+remaining = 10
+remaining = 9
+count = 1
+remaining = 10
+remaining = 9
+count = 2
+remaining = 10
+End count = 2
+```
+
+---
+
+### while — conditional loop
+
+**Definition:** runs a block of code as long as a condition stays true; exits automatically once the condition becomes false.
+
+```rust
+fn main() {
+    let mut number = 3;
+
+    while number != 0 {
+        println!("{number}!");
+        number -= 1;
+    }
+
+    println!("LIFTOFF!!!");
+}
+```
+
+**Output:**
+
+```
+3!
+2!
+1!
+LIFTOFF!!!
+```
+
+---
+
+#### while for looping through a collection (not recommended — shown for comparison)
+
+**Definition:** using `while` with a manual index counter to iterate an array — works, but error-prone (wrong bound → panic) and slower (bounds-checked every iteration).
+
+```rust
+fn main() {
+    let a = [10, 20, 30, 40, 50];
+    let mut index = 0;
+
+    while index < 5 {
+        println!("the value is: {}", a[index]);
+        index += 1;
+    }
+}
+```
+
+**Output:**
+
+```
+the value is: 10
+the value is: 20
+the value is: 30
+the value is: 40
+the value is: 50
+```
+
+---
+
+### for — looping over a collection
+
+**Definition:** the safe, concise way to loop over every item in a collection without managing an index manually.
+
+```rust
+fn main() {
+    let a = [10, 20, 30, 40, 50];
+
+    for element in a {
+        println!("the value is: {element}");
+    }
+}
+```
+
+**Output:**
+
+```
+the value is: 10
+the value is: 20
+the value is: 30
+the value is: 40
+the value is: 50
+```
+
+---
+
+#### for with a `Range` (countdown)
+
+**Definition:** a `Range` (`1..4`) generates a sequence of numbers (inclusive start, exclusive end); `.rev()` reverses the sequence — commonly used for counting instead of `while`.
+
+```rust
+fn main() {
+    for number in (1..4).rev() {
+        println!("{number}!");
+    }
+    println!("LIFTOFF!!!");
+}
+```
+
+**Output:**
+
+```
+3!
+2!
+1!
+LIFTOFF!!!
+```

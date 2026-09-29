@@ -314,6 +314,8 @@ What's covered:
 ---
 
 ## The starting point: separate variables
+here's a problem that these two variables are not tied to each other, meaning if used these to calculate rectangles it would be fine and compile and give correct answer but in other use cases like drawing a rectangle that would be result in slight wrong answers like drawing (wide vs tall) rectangles
+
 
 ```rust
 fn main() {
@@ -365,12 +367,14 @@ Better — now there's one argument instead of two. But tuples don't name their 
 ## Refactor 2 — grouping with a struct
 
 ```rust
+
+// make the struct that gonna hold the data for you 
 struct Rectangle {
     width: u32,
     height: u32,
 }
 
-fn main() {
+fn main() { // initilize values 
     let rect1 = Rectangle {
         width: 30,
         height: 50,
@@ -378,7 +382,7 @@ fn main() {
 
     println!(
         "The area of the rectangle is {} square pixels.",
-        area(&rect1)
+        area(&rect1) 
     );
 }
 
@@ -418,7 +422,7 @@ error[E0277]: `Rectangle` doesn't implement `Debug`
 Still an error — `Debug` isn't automatic either. You have to **opt in** by adding `#[derive(Debug)]` right above the struct definition:
 
 ```rust
-#[derive(Debug)]
+#[derive(Debug)] // << here 
 struct Rectangle {
     width: u32,
     height: u32,
@@ -515,3 +519,177 @@ Printing a struct:
 
 # 08-Methods
 
+## Method_syntax
+Methods look almost like functions, but they live _inside_ a struct's context and always take `self` as their first parameter. This note covers defining methods with `impl`, the `&self` shorthand, and the trick of naming a method the same as a field (getters).
+
+What's covered:
+
+- What a method is, vs. a plain function
+- Defining a method with `impl` and calling it with dot syntax
+- The `&self` shorthand and what `Self` means
+- Choosing `self` vs `&self` vs `&mut self`
+- Why methods (organization)
+- Same-name methods and fields (getters)
+
+---
+
+### Methods vs. functions
+
+**Definition:** methods are declared with `fn`, can take parameters, and return values — just like functions. The difference: a method is defined _within the context of a struct_ (or an enum, or a trait object — covered later), and its **first parameter is always `self`**, representing the specific instance the method is called on.
+
+---
+
+### Defining a method — turning `area(&rect1)` into `rect1.area()`
+
+```rust
+#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+impl Rectangle {
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
+}
+
+fn main() {
+    let rect1 = Rectangle {
+        width: 30,
+        height: 50,
+    };
+
+    println!(
+        "The area of the rectangle is {} square pixels.",
+        rect1.area()
+    );
+}
+```
+
+To attach a method to `Rectangle`, everything goes inside an `impl Rectangle { ... }` block — everything in it is associated with the `Rectangle` type. The old `area(rectangle: &Rectangle)` function moves inside that block, and its parameter becomes `&self` instead of `rectangle: &Rectangle`.
+
+**Calling it:** method syntax goes _after_ the instance — a dot, the method name, then parentheses and any arguments: `rect1.area()`.
+
+---
+
+### `&self` — what it actually means
+
+`&self` is shorthand for `self: &Self`. Inside an `impl` block, `Self` is an alias for whatever type the block is implementing — here, `Rectangle`. Rust requires every method's first parameter to be named `self` of type `Self`, so it lets you abbreviate that down to just `self`. The `&` in front still means the same thing it always did: this method **borrows** the instance rather than taking ownership of it.
+
+> Just like any other parameter, `self` can be taken three ways:
+> 
+> - `&self` — borrow immutably (read-only access) — used here
+> - `&mut self` — borrow mutably (the method changes the instance)
+> - `self` — take ownership outright (rare; typically used when the method **transforms** `self` into something else and the original instance shouldn't be usable afterward)
+
+`&self` was chosen here for the same reason `&Rectangle` was chosen for the plain function version: no need to take ownership, and no need to write to the struct — just read it.
+
+---
+
+### Why methods over functions?
+
+Beyond the nicer dot-syntax and not having to restate `self`'s type in every signature, the main benefit is **organization**: every capability of a `Rectangle` lives together inside one `impl` block, instead of being scattered as standalone functions someone has to go hunting for.
+
+---
+
+### Same name for a method and a field (getters)
+
+Rust allows a method to share its name with one of the struct's fields:
+
+```rust
+impl Rectangle {
+    fn width(&self) -> bool {
+        self.width > 0
+    }
+}
+
+fn main() {
+    let rect1 = Rectangle {
+        width: 30,
+        height: 50,
+    };
+
+    if rect1.width() {
+        println!("The rectangle has a nonzero width; it is {}", rect1.width);
+    }
+}
+```
+
+Here `width` the **method** returns `true`/`false` based on whether the `width` **field** is greater than 0 — a completely different purpose from the field itself, just sharing a name.
+
+> **How Rust tells them apart:** `rect1.width()` (with parentheses) means the _method_. `rect1.width` (no parentheses) means the _field_.
+
+**Getters:** when a same-named method's only job is to return the field's value unchanged, it's called a getter. Rust does **not** auto-generate these the way some other languages do — you write them yourself. They're useful because a field can be made **private** while its getter method stays **public**, giving read-only access to that field as part of the type's public API (public/private is covered later).
+
+---
+
+#### Big picture
+
+```
+Plain function:      area(&rect1)              ← struct passed in as an argument
+
+Method (impl block):
+  impl Rectangle {
+      fn area(&self) -> u32 { self.width * self.height }
+  }
+  rect1.area()                                  ← called ON the instance, via dot syntax
+
+self variants:
+  &self       → borrow, read-only     (most common)
+  &mut self   → borrow, can mutate
+  self        → take ownership        (rare — usually a transforming method)
+
+Field vs. same-named method:
+  rect1.width      → the FIELD
+  rect1.width()    → the METHOD (parentheses = call it)
+```
+
+
+ 
+## Associated functions
+
+**Definition:** any function defined inside an `impl` block is called an **associated function** — it's associated with the type the block names. Not all associated functions are methods: a function skips `self` (and so isn't a method) when it doesn't need an existing instance to work with. `String::from` is a familiar example — an associated function on `String`, not a method.
+
+**Common use — constructors:**
+
+```rust
+impl Rectangle {
+    fn square(size: u32) -> Self {
+        Self {
+            width: size,
+            height: size,
+        }
+    }
+}
+```
+
+`square` builds and returns a new `Rectangle` from a single size value, used for both `width` and `height`. `Self` (both as the return type and inside the body) is just an alias for whatever type the `impl` block belongs to — `Rectangle` here.
+
+**Calling it** uses `::`, not dot syntax:
+
+```rust
+let sq = Rectangle::square(3);
+```
+
+---
+
+## Multiple `impl` blocks
+
+A struct can have more than one `impl` block — Rust allows it, even though a single block works just as well:
+
+```rust
+impl Rectangle {
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
+}
+
+impl Rectangle {
+    fn square(size: u32) -> Self {
+        Self { width: size, height: size }
+    }
+}
+```
+
+No practical benefit here — this is equivalent to putting both in one block. A real use case for splitting them shows up later, with generic types and traits.

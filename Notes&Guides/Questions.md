@@ -1,21 +1,2 @@
-in this code why would that cause an error ? 
-
-```rust 
-fn main(){
-
-let x = String::from("hello");
-
-  
-
-println!("{x}");
-
-  
-
-printing(x);
-
-  
-
-println!("{x}"); //error here , borrowing error 
-
-}
-```
+- try to input all the struct values from user input not hardcoded
+	  take inputs using user input and save them into tuples then map them to the struct fields

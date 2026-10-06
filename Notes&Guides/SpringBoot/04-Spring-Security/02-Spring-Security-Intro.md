@@ -123,7 +123,47 @@ public class SecurityConfig {
 8. **Fix to note:** `.roles()` is case-sensitive — Spring only adds the `ROLE_` prefix, it doesn't normalize the case you pass in. So `"ADMIN"` → `ROLE_ADMIN`, but `"User"` → `ROLE_User`, not `ROLE_USER`. Any check like `hasRole("USER")` would reject this account, since it's a plain string match under the hood. Keep role names consistently uppercase (`"USER"`, `"ADMIN"`) to avoid this.
 
 
+## Lambda DSL (if you getting blue lines)
 
+in case your code looked like this
+```java
+
+http 
+.csrf().disable() 
+.authorizeRequests() 
+
+.antMatchers(HttpMethod.DELETE, "/delete/*/contact").hasRole("ADMIN") .antMatchers(HttpMethod.POST).hasAnyRole("ADMIN","User") .antMatchers(HttpMethod.GET).permitAll() 
+
+.anyRequest().authenticated() 
+.and().httpBasic()
+.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+```
+
+this previous code writing style is deprecated, so instead write using Lambda DSL style
+like the one below:
+```java
+
+http
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+            .antMatchers(HttpMethod.DELETE, "/delete/*/contact").hasRole("ADMIN")
+            .antMatchers(HttpMethod.POST).hasAnyRole("ADMIN","User")
+            .antMatchers(HttpMethod.GET).permitAll()
+            .anyRequest().authenticated())
+
+        .httpBasic(Customizer.withDefaults())
+        .sessionManagement(sessionManagment -> 
+            sessionManagment.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+```
+
+these are the differences
+The Blue Underlines should now be gone. The biggest changes here are:
+
+1. `**.csrf().disable()**` becomes `**.csrf(csrf -> csrf.disable())**`.
+    
+2. `**.authorizeRequests()**` becomes `**.authorizeHttpRequests(authorizeRequests -> authorizeRequests ...)**`.
+    
+3. `**.httpBasic()**` becomes `**.httpBasic(Customizer.withDefaults())**`.
 ## CSRF
 
 > **CSRF (Cross-Site Request Forgery):** an attacker tricks an already-logged-in user's browser into sending an unwanted request to a trusted site. The browser attaches the credentials automatically.

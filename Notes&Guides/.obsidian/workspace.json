@@ -35,8 +35,7 @@
               "title": "03-Token_Based_Authentiation_(JWT)"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -173,7 +172,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "SpringBoot/04-Spring-Security/03-Token_Based_Authentiation_(JWT).md",
+                "file": "Rust/07-Enums.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -213,12 +212,14 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "948a7db6a6fb1a45",
+  "active": "48341b6acb2581c8",
   "lastOpenFiles": [
+    "Rust/02-Building_Guessing_game.md",
+    "Rust/03-Rust_Common_Concepts.md",
+    "Rust/07-Enums.md",
+    "SpringBoot/04-Spring-Security/03-Token_Based_Authentiation_(JWT).md",
     "Rust/06-Structs.md",
     "SpringBoot/04-Spring-Security/02-Spring-Security-Intro.md",
-    "SpringBoot/04-Spring-Security/03-Token_Based_Authentiation_(JWT).md",
-    "Rust/07-Enums.md",
     "SpringBoot/Media/Screenshot From 2026-10-01 00-09-09.png",
     "SpringBoot/04-Spring-Security/01-Intro to WebSec.md",
     "SpringBoot/TOC.md",
@@ -227,7 +228,6 @@
     "DailyReports/CCSP_DailyReports/2026-09-28.md",
     "DailyReports/CCSP_DailyReports/Unconfirmed 153400.crdownload",
     "Rust/01-Introduction_To_Rust.md",
-    "Rust/02-Building_Guessing_game.md",
     "Questions.md",
     "Rust/05-References_And_Borrowing.md",
     "DailyReports/LeapDailyReports/2026-09-22.md",
@@ -235,7 +235,6 @@
     "DailyReports/LeapDailyReports/2026-09-21.md",
     "DailyReports/LeapDailyReports/Unconfirmed 327439.crdownload",
     "Rust/04-Ownership.md",
-    "Rust/03-Rust_Common_Concepts.md",
     "DailyReports/LeapDailyReports/2026-09-16.md",
     "DailyReports/LeapDailyReports/Unconfirmed 195548.crdownload",
     "DailyReports/LeapDailyReports/2026-09-17.md",

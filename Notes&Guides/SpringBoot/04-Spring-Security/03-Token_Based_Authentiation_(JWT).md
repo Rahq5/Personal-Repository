@@ -121,8 +121,8 @@ RSASSA-PKCS1-v1_5-SIGN
 ### final example
 following these steps of making a JWT token will produce a full token, dot seperated example like this one:
 
-```python
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9****.****eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNzA4MzQ1MTIzLCJleHAiOjE3MDgzNTUxMjN9****.****SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNzA4MzQ1MTIzLCJleHAiOjE3MDgzNTUxMjN9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 ```
  which decoded to 
  ```json
@@ -146,4 +146,76 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9****.****eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI
 ## JWT Authentication work 
 https://www.geeksforgeeks.org/web-tech/json-web-token-jwt/
 
-complete from the same header name 
+JWT used in authentication in these key steps:
+1. **Login request:** 
+	   user logs in through the client app (e.g, web browser or mobile app ) by sending their credentials (username + password)
+	   
+2. **Server generates JWT:**
+	   if credentials are correct , the server generates a JWT token using secret key
+	   
+3. **Return JWT:**
+	   server sends back the JWT, which client gonna save 
+	   
+4. **Further requests with JWT:**
+	   for any further requests the client sends the jwt along with the request.
+	   The server verifies the JWT before granting access to protected resources.
+
+> ****Note:**** 
+> 	JWTs are primarily used for authentication and secure data exchange in web applications and APIs
+
+## Hands-on JWT
+here am entering a website to perform some experiments to understand JWT auth better
+
+1. Logged into the app as a normal user (`wiener`), which issued a JWT session cookie.
+   
+2. Captured that request in Burp’s **Proxy → HTTP history**, sent it to **Repeater**.
+   
+3. Used Burp’s **Inspector** panel to decode the JWT into its three parts: Header, Payload, Signature.
+   
+4. Tried accessing `/admin` directly — got denied, since `wiener` isn’t an admin.
+   
+5. In the JWT **Payload**, changed the `sub` (subject) claim from `wiener` to `administrator`, then clicked **Apply changes** — Burp re-encoded the token automatically, but the **Signature stayed unchanged/invalid** for the new payload.
+
+6. Sent the request to `/admin` with this tampered token. The server **decoded the payload and trusted it without verifying the signature matched** — granting admin access.
+   
+7. From the admin panel, found the delete link for user `carlos` and sent that request too, deleting the user.
+
+### Best Practices
+
+- **Use HTTPS:** 
+	  Encrypt communication between the client and server. In the lab everything was encooded to Base64 which allowed me to read them after decoded
+	  
+- **store tokens securely:**
+	  Prefer HttpOnly cookies over Local Storage for sensitive tokens.
+	  
+- **set short token expiration:**
+	  Keep access tokens short-lived (for example, 15–60 minutes)
+	  
+- **use refreash token:** 
+	  Generate new access tokens without requiring users to log in again.
+	  
+- **Verify JWT signature:**
+	  Always validate the token's signature before trusting its contents.
+	  In this one the website lab only looked at the payload and not the signtaure although the signature got changed too after i changed the payload from `sub: "wiener` to `sub: "adminstrator` and the website didnt check for that
+	  
+- **Avoid senstive data in payload:** 
+	  Return appropriate HTTP status codes without exposing sensitive error details.
+
+### Common Issues and errors 
+The following are some common errors you may encounter while implementing JWT authentication:
+
+- ****Invalid Signature:**** The signing and verification keys do not match.
+  
+- ****Token Expired:**** The JWT has passed its expiration time (exp).
+  
+- ****Malformed Token:**** The JWT is incomplete, corrupted, or has an invalid format.
+  
+- ****Missing Authorization Header:**** The request does not include the Authorization header.
+  
+- ****Invalid Bearer Token:**** The Bearer prefix is missing or the token format is invalid.
+  
+- ****JWT Rejected:**** The server failed to validate the token due to expiration, an invalid signature, or invalid claims.
+
+- ****Insufficient Scope:**** The token lacks the required permissions for the requested action.
+  
+- ****JWT Decode Failed:**** The token cannot be decoded because it is malformed or improperly encoded.

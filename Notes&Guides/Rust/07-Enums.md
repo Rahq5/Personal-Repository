@@ -78,7 +78,7 @@ IpAddr { kind: IPv6, address: "::1" }
 
 
 # Enum Values 
-previoulsy we knew how to make an enum , now we gonna do some action on it 
+previously we knew how to make an enum , now we gonna do some action on it 
 
 ## Assign and change values
 assuming we have this enum we gonna use along all examples:
@@ -91,7 +91,7 @@ enum size{
 }
 ```
 
-Assigning to a variable:
+Assigning to a variables:
 ```rust
 let fat = size::big;
 let skinny = size::small;
@@ -112,7 +112,7 @@ small
 ```
 
 ## Pregnant enums (enums with data in them)
-just kidding it's not called that but it got me confused a but why would that happen.
+just kidding it's not called that but it got me confused a bit why would that even exist.
 
 here you can fit data inside enums, if you got confused why would this be even exist, this would help in situations like IPs (see IP example) that each type of enums requiers a specific data or different treatment
 
@@ -154,31 +154,39 @@ enum Message {
     Write(String),              // one String
     ChangeColor(i32, i32, i32), // three numbers (red, green, blue)
 }
+
+// إضافة الميثود call للـ Enum
+impl Message {
+    fn call(&self) {
+        match self {
+            Message::Quit => println!("Quit: no data, just shut down"),
+            Message::Move { x, y } => println!("Move: go to x={}, y={}", x, y),
+            Message::Write(text) => println!("Write: print '{}'", text),
+            Message::ChangeColor(r, g, b) => println!("Color: rgb({}, {}, {})", r, g, b),
+        }
+    }
+}
 ```
 
 and this code to use the enum:
 ```rust
 // ONE function that accepts ANY of the four shapes
+
 fn process(msg: Message) {
     println!("Received: {:?}", msg);
-    msg.call();
+    msg.call(); // الآن تعمل بنجاح!
 }
 
 fn main() {
-    // create one value of each shape
     let m1 = Message::Quit;
     let m2 = Message::Move { x: 10, y: 20 };
     let m3 = Message::Write(String::from("hello"));
     let m4 = Message::ChangeColor(255, 0, 128);
 
-    // a Vec can hold all four because they are one type
     let messages = vec![m1, m2, m3, m4];
 
     for m in messages {
         process(m); 
-        // here he'e calling enum by enum
-        // you can do it as a user input so user select what 
-        // input he wants to process 
     }
 }
 ```

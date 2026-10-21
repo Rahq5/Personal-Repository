@@ -369,9 +369,12 @@ SecurityFilterChain filterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) 
         // The SecurityContext is dropped after each request, so every request must carry its own JWT.
         .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
+
+		// vvv important part vvv
         .authorizeHttpRequests(auth -> auth
             // These two must be open: a user has no token yet when registering or logging in.
             .requestMatchers("/register", "/login").permitAll()
+            
             // Everything else needs an authenticated user (someone set in the SecurityContext).
             .anyRequest().authenticated())
 
@@ -585,3 +588,117 @@ here we gonna implement the pathways we explained in these topics
 - [[03-Token_Based_Authentiation_(JWT)#Pathway 3 Authorize Requests|Authoriztion]]
 
 ## Register Implmentation
+### Recap 
+we had an endpoint which is `/register` which permits all requests in order to be able to take user credentials without the need to authenticate. Then credentials will be executed (password hashed) then saved on the database.
+
+So the point here is to make an endpoint open for anyone.
+
+### implementation
+
+steps:
+1. we gonna add the permitAll to register endpoint
+2. save user credentials to the database 
+3. encrypting password on saving to database; so no to plain passwords on databases
+
+
+Step 1: permitting register
+```java 
+
+@Configuration
+@AllArgsConstructor
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .headers(headers -> headers.frameOptions().disable())
+            .csrf(csrf -> csrf.disable())
+            
+            .authorizeRequests(requests -> requests
+                .antMatchers("/h2/**").permitAll() // New Line: allows us to access the h2 console without the need to authenticate. ' ** '  instead of ' * ' because multiple path levels will follow /h2.
+                
+                //  vvvvvv this line vvvvvvvv
+                .antMatchers(HttpMethod.POST,SecurityConstants.REGISTER_PATH).permitAll()
+                // here i told the filter that any post request goes to the path of register
+                // as example "/user/register/" will be permitted for all users  
+                
+            
+                .anyRequest().authenticated())
+                // BUT any request will requierd to be authenticated 
+            .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        return http.build();
+    }
+    
+}
+```
+
+step 2: saving user to database
+```java
+@RestController
+@RequestMapping("/user")
+public class UserController {
+
+
+    UserService userService;
+
+	@GetMapping("/{id}")
+	public ResponseEntity<User> findById(@PathVariable Long id) {
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+    @PostMapping("/register")
+	public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
+	
+		//                          vvvvvvvvvvvvvvvvvvvvvvvvv
+		return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
+		//this line-----------------^^^^^^^^^^^^^^^^^^^^^^^^^^---------------------
+		// just added the user have to be saved after being registerd 
+	}
+
+}
+```
+
+step 3: encrypting the password before saving to database
+>Note: some codes are deleted in order to focus on the important part (dont worry nothing important got deleted :) )
+```java 
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+@Service
+//@AllArgsConstructor
+public class UserServiceImpl implements UserService {
+
+    private UserRepository userRepository;
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Override
+    public User saveUser(User user) {
+    
+    //  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+    // this calls bCrypt to encrypt the data before being saved to database    
+    
+        return userRepository.save(user);
+    }
+    
+}
+```
+
+now try to send via postman a post request with this JSON body:
+```json
+{
+	"username": "anything",
+	"password": "anyhting295"
+}
+```
+
+and you should get 201 created response and now you are done with this part 
+
+## Logging in 
+### Recap
+after the user created their account , the credentials will be saved in the database, then comes the logging in part which gonna ask the user to enter that credentials again in order to respond with the token. 
+- if credentials are correct: it will respond with the token that gonna be saved in user's browser 
+- if credentials are wrong: it will not respond and not token is created 
+
+### implementation
+steps :
+1. 

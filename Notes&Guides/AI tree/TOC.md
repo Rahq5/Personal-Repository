@@ -156,8 +156,4 @@
 - [[Natural Language Processing#key Parts of NLP]]
 - [[Natural Language Processing#How it works and where mostly used?]]
 
-## Computer Vision
-- *(no notes yet)*
-
-## Cognitive Computing
-- *(no notes yet)*
+## Research (TheArtOfNotForgetting)

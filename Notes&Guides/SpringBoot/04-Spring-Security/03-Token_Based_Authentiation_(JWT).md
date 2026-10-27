@@ -587,7 +587,7 @@ here we gonna implement the pathways we explained in these topics
 - [[03-Token_Based_Authentiation_(JWT)#Pathway 2 Login (Authentication)|Log in]]
 - [[03-Token_Based_Authentiation_(JWT)#Pathway 3 Authorize Requests|Authoriztion]]
 
-## Register Implmentation
+## Register Implementation
 ### Recap 
 we had an endpoint which is `/register` which permits all requests in order to be able to take user credentials without the need to authenticate. Then credentials will be executed (password hashed) then saved on the database.
 

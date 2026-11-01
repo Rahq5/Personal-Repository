@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Logs_Template.md",
+                "file": "Linux/audio-dummy-output-fix.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Logs_Template"
+              "title": "audio-dummy-output-fix"
             }
           }
         ],
@@ -114,7 +114,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Logs_Template.md",
+                "file": "Linux/audio-dummy-output-fix.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -133,7 +133,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Logs_Template.md",
+                "file": "Linux/audio-dummy-output-fix.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -176,7 +176,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Logs_Template.md",
+                "file": "Linux/audio-dummy-output-fix.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -205,14 +205,14 @@
   },
   "active": "421176fa2ace3219",
   "lastOpenFiles": [
+    "Readme.md",
+    "Logs_Template.md",
     "Linux/raspiHeadlessSetupReport.md",
     "Linux/linux-audio-autoswitch-problem-report.md",
     "Linux/audio-dummy-output-fix.md",
     "Linux",
-    "Readme.md",
     "CCSP/MultipleSelectionFiles_2026-11-01.md",
     "CCSP/StreamingMemoryProblem_2026-11-01.md",
-    "CCSP/StreamingMemoryProblem_1112026.md",
-    "Logs_Template.md"
+    "CCSP/StreamingMemoryProblem_1112026.md"
   ]
 }

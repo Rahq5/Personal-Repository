@@ -561,8 +561,15 @@ Important details:
 - **Key size:** HS256 needs a secret of at least 256 bits (32 bytes); jjwt rejects weaker keys.
 
 ---
+## 6. Exception handling + Dispatcher servlet
 
-## 6. Corrected Misunderstandings
+
+
+
+
+
+
+##  Corrected Misunderstandings
 
 - "`header + payload + secret = signature`" is loose. The signature is an **HMAC computed with** the secret over the encoded header and payload.
 - "Everything is Base64, so I could read it" means encoding, not encryption. HTTPS and Base64 solve different problems.
@@ -699,6 +706,100 @@ after the user created their account , the credentials will be saved in the data
 - if credentials are correct: it will respond with the token that gonna be saved in user's browser 
 - if credentials are wrong: it will not respond and not token is created 
 
+so what happens is:
+1. our `AuthFilter` will have a method called `attemptAuth` that will contain the credentials of the user 
+2. then this object that contains the creds will be sent over to `AuthManager` 
+3. the `AuthManager` gonna perform a hash to the password then compare it to the hash found in the records
+	1. if matched: it's gonna return the authentication object and upon that it will call `successAuth()` which is gonna create the JWT token, then sends back the JWT token to the user 
+	2. if not matched : nothing is returned and no token is created 
 ### implementation
 steps :
-1. 
+1. impelement the `attmeptAuthentications` 
+2. Add the written filter in `filterChain()`
+
+
+
+step 1: implementing the `attmeptAuthentications`:
+inside `project/security/filter/AuthenticationFilter.java`
+```java 
+
+
+public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter{
+    
+
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)throws AuthenticationException {
+
+//      vvvvvvvvvvvvvvvvvvvvv this line vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+
+	try{
+		User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
+// this line will strip out the credintials from the request as a binary (binary cuz it's using streaming) then read it and map it to the entity user.java
+
+// the request should have the exact field names as user.java otherwise it will fire a RunTimeException
+
+		
+//  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+		System.out.println(user.getPassword());
+		System.out.println(user.getUsername());
+		// these are just for testing to see credintials if they arrived or not 
+	
+        }catch(IOException e){
+            throw new RuntimeException();
+            // this will be fired in case of one of the fields didnt match 
+        }
+
+        return super.attemptAuthentication(request, response);
+    }
+}
+
+```
+
+>Note: to confirm what i meant by "matching fields".
+>assuming that user.java got a field called "password". if the request sends this field but written in a diffirent way like "passwordddd" it will be rejected  
+
+
+
+step 2: Add the written filter in `filterChain()`
+```java
+
+@Configuration
+@AllArgsConstructor
+public class SecurityConfig {
+
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+//  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter();
+        //needed a variable to hold the filter, so you could call a setter on it before adding it to the chain
+        
+        authenticationFilter.setFilterProcessesUrl("/authenticate");
+        // tells the filter “only react to `POST /authenticate`”.
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+        http
+            .headers(headers -> headers.frameOptions().disable())
+            .csrf(csrf -> csrf.disable())
+            .authorizeRequests(requests -> requests
+                
+                .antMatchers("/h2/**").permitAll() // New Line: allows us to access the h2 console without the need to authenticate. ' ** '  instead of ' * ' because multiple path levels will follow /h2.
+                .antMatchers(HttpMethod.POST,SecurityConstants.REGISTER_PATH).permitAll()
+                .anyRequest().authenticated())
+                
+//           vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv  
+                .addFilter(new AuthenticationFilter())
+//          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+// this line gonna add the filter we just implememnted              
+                
+             
+
+            .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        return http.build();
+    }
+    
+}
+```
+

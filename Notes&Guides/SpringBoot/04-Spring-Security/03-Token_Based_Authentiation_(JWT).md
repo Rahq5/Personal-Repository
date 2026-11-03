@@ -563,7 +563,198 @@ Important details:
 ---
 ## 6. Exception handling + Dispatcher servlet
 
+ These notes explain why DispatcherServlet (or controller) cannot handle exceptions thrown by Spring Security filters, and how a custom `ExceptionHandlerFilter` fixes it. It matters because without it, errors in the security layer return confusing responses (like 403) instead of a clean 400.
 
+What is covered:
+
+- The problem: two "doors" and where global exceptions live
+- The fix: a filter placed first in the chain
+- The code
+- A gotcha that caused a 403
+- The big picture flow
+
+### The Problem
+
+Global exception handling (`@ControllerAdvice` / `@ExceptionHandler`) only works **inside the `DispatcherServlet`**, which is the part that routes requests to controllers. Security filters run **before** the `DispatcherServlet`. So if a request fails in a filter, it never reaches the controller area, and the global handler never sees the exception.
+
+shown this diagram explains the problem
+![[Untitled Diagram.jpg]]
+
+
+
+House analogy: door 1 is the security filters, door 2 is the controller area where the exception handler lives. A request kicked out at door 1 never reaches door 2.
+
+> **DispatcherServlet**: Spring MVC's front controller; it receives requests and sends them to the right controller method. **Global handler**: a class annotated with `@ControllerAdvice` that turns exceptions into HTTP responses.
+
+### The Fix
+
+Add our own filter that sits **first** in the chain. It does no checking on the way in. It just wraps everything after it in a `try/catch` (a safety net). Any exception thrown further down the chain travels back up to it, and it turns the exception into a response.
+
+Shown diagram where to put our ExcecptionHandlerFilter:
+![[Untitled Diagram.drawio.png]]
+> **Safety net**: code that catches failures after they happen instead of preventing them. **Chain order**: filters form a list; the first one is the outermost wrapper, so every later exception passes through it on the way out.
+
+
+> **addFilterBefore / addFilterAt / addFilterAfter**: place a filter relative to a known filter in the list. **addFilter**: add a filter at its natural position; it must extend a filter Spring Security already knows.
+
+### The Code
+
+The filter:
+
+java
+
+```java
+public class ExceptionHandlerFilter extends OncePerRequestFilter {
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
+            
+            
+        try {
+            // pass the request down the chain (AuthenticationFilter and the rest run inside this call)
+            // .doFilter will go to the next filter which is the AuthenticationFiler
+            filterChain.doFilter(request, response);
+            
+            
+        } catch (RuntimeException e) {
+            // an exception came back up the chain: answer with 400 instead of crashing
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
+    }
+}
+```
+
+Registering it in the security config:
+java
+```java
+http
+    // run ExceptionHandlerFilter BEFORE AuthenticationFilter, so it wraps it
+    .addFilterBefore(new ExceptionHandlerFilter(), AuthenticationFilter.class)
+    
+    // add our custom login filter (it extends UsernamePasswordAuthenticationFilter)
+    .addFilter(authenticationFilter);
+```
+
+Where the exception comes from (inside `AuthenticationFilter`):
+java
+```java
+try {
+    // read the JSON body and map it to the User entity
+    User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
+} catch (IOException e) {
+    // bad JSON or unknown field names: rethrow so it travels up to ExceptionHandlerFilter
+    throw new RuntimeException();
+}
+```
+
+
+see full version example of SecurityConfig code:
+```java
+@Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter();
+        authenticationFilter.setFilterProcessesUrl("/authenticate");
+
+        http
+            .headers(headers -> headers.frameOptions().disable())
+            .csrf(csrf -> csrf.disable())
+            .authorizeRequests(requests -> requests
+                
+                .antMatchers("/h2/**").permitAll() 
+                .antMatchers(HttpMethod.POST,SecurityConstants.REGISTER_PATH).permitAll()
+                .anyRequest().authenticated())
+                
+                // here's our part exactly
+                .addFilterBefore(new ExceptionHandlerFilter(), AuthenticationFilter.class) 
+                .addFilter(authenticationFilter)
+                
+
+            .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        return http.build();
+    }
+    
+}
+```
+
+
+### Full codes example
+full version of AuthenticationFiler code:
+```java
+
+public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter{
+
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+            throws AuthenticationException {
+
+        try{
+		        // here it where to read the json and map it , if something wrong here it will 
+		        // throw our exceptionHandlerFilter
+                User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
+               
+
+                System.out.println(user.getPassword());
+                System.out.println(user.getUsername());
+                // these are just for testing to see credintials if they arrived or not 
+        
+        }catch(IOException e){
+            throw new RuntimeException();
+        }
+
+        return super.attemptAuthentication(request, response);
+    }
+}
+```
+
+full version of ExceptionHandlerFilter:
+```java
+
+public class ExceptionHandlerFilter extends OncePerRequestFilter{
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        
+            try{
+	            // here where it goes to next filters
+                filterChain.doFilter(request, response);
+                
+                // and this catches the error and deal with it , in this case it just 
+                // sends back a 400 response
+            }catch(RuntimeException e){
+                System.out.println(e.getMessage());
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            }
+    }
+
+}
+```
+
+
+to send a message to the user through your exception, add these lines in the body code of catch
+```java
+}catch(RuntimeException e){
+                System.out.println(e.getMessage());
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                
+                response.getWriter.write("you got Bad_Request buddy");
+                response.getWriter.flush();
+            }
+```
+
+
+### Limits to Remember
+
+- The catch only sees exceptions that **travel back up** to it. A wrong password (`AuthenticationException`) is handled inside `AbstractAuthenticationProcessingFilter` (401), so it never reaches our filter.
+  
+- An unauthenticated request to a protected URL is handled by `ExceptionTranslationFilter`, not by ours.
+  
+- `setStatus(400)` sends only a status code with no body, and the exception is swallowed (the stack trace is lost unless logged).
 
 
 

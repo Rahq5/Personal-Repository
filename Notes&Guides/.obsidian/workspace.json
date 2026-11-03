@@ -11,10 +11,14 @@
             "id": "90447b49dba14ce0",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "SpringBoot/04-Spring-Security/03-Token_Based_Authentiation_(JWT).md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "03-Token_Based_Authentiation_(JWT)"
             }
           }
         ]
@@ -79,7 +83,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 281.02239990234375
+    "width": 200
   },
   "right": {
     "id": "af6e662e9ade4ceb",
@@ -143,7 +147,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "202611022244.md",
+                "file": "SpringBoot/04-Spring-Security/03-Token_Based_Authentiation_(JWT).md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -169,7 +173,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 426.44482421875
+    "width": 287.64892578125
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -186,15 +190,18 @@
       "translate:Open translation view": false
     }
   },
-  "active": "1269930e6e71bf10",
+  "active": "90447b49dba14ce0",
   "lastOpenFiles": [
+    "SpringBoot/Media/Untitled Diagram.drawio.png",
+    "SpringBoot/04-Spring-Security/03-Token_Based_Authentiation_(JWT).md",
+    "SpringBoot/Media/Untitled Diagram.jpg",
+    "Untitled.canvas",
+    "202611022244.md",
     "AI tree/LLM-Inference.md",
     "Rust/07-Enums.md",
-    "202611022244.md",
     "AI tree/AI_Root.md",
     "AI tree/TOC.md",
     "Rust/01-Introduction_To_Rust.md",
-    "SpringBoot/04-Spring-Security/03-Token_Based_Authentiation_(JWT).md",
     "DailyReports/template/2026-07-25.md",
     "Linux/raspi/bugsAndFixes/raspiHeadlessSetupReport.md",
     "DailyReports/LeapDailyReports_aligned/LeapDailyReports/Leap daily reports.md",
@@ -214,13 +221,11 @@
     "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕10∕04.md",
     "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕09∕30.md",
     "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕09∕29.md",
-    "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕09∕27.md",
     "DailyReports/LeapDailyReports_aligned/LeapDailyReports/files",
     "DailyReports/LeapDailyReports_aligned/LeapDailyReports",
     "DailyReports/LeapDailyReports_aligned",
     "DailyReports/LeapDailyReports.zip",
     "AI tree/images/Screenshot From 2026-10-27 17-21-25.png",
-    "Untitled.canvas",
     "ToNotion.zip",
     "SpringBoot/Media/Screenshot From 2026-10-01 00-09-09.png",
     "SpringBoot/Media/Screenshot From 2026-09-28 16-48-30.png",
@@ -232,8 +237,6 @@
     "AI tree/diagram/WholeAITree.png",
     "RAG_and_AI/images/Screenshot From 2026-08-09 17-30-13.png",
     "Kaust-Python/media/Screenshot From 2025-12-11 16-14-01.png",
-    "Kaust-Python/media/Screenshot From 2025-12-11 15-28-03.png",
-    "Kaust-Python/media/Screenshot From 2025-11-27 14-08-59.png",
-    "Kaust-Python/media/Screenshot From 2025-11-11 17-55-41.png"
+    "Kaust-Python/media/Screenshot From 2025-12-11 15-28-03.png"
   ]
 }

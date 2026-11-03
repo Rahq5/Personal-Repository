@@ -186,14 +186,14 @@
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
       "zk-prefixer:Create new unique note": false,
-      "publish:Publish changes...": false,
       "translate:Open translation view": false
     }
   },
   "active": "90447b49dba14ce0",
   "lastOpenFiles": [
-    "SpringBoot/Media/Untitled Diagram.drawio.png",
+    "DailyReports/2026-11-03.md",
     "SpringBoot/04-Spring-Security/03-Token_Based_Authentiation_(JWT).md",
+    "SpringBoot/Media/Untitled Diagram.drawio.png",
     "SpringBoot/Media/Untitled Diagram.jpg",
     "Untitled.canvas",
     "202611022244.md",

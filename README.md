@@ -1,9 +1,9 @@
-# Personal Archive
+# Second Brain archive
 
-My personal collection of notes, resources and some quicky Stuff
+My personal collection of notes, logs, Ai templates and more
 
 # How to use ?
-ensure obsidian is pre installed and just download via downloading button in git
+ensure obsidian is pre installed and just clone the repo
 
 # How to update files ?
 1. clone repo on your local device
@@ -14,15 +14,20 @@ ensure obsidian is pre installed and just download via downloading button in git
 
 ## What's Inside
 
-- **Notes**: Course materials and learning guides
-- **Resources**: Tech articles, tutorials, and references
-- more Incoming..
+- **Notes**: guides on wide topics (e.g. Ai, backend, linux and more 
+
+- **templates**: Ai prompts used for defined purpose, or just .md templates
+
+- **logs**: here i save all problems and notices where ever occurs to keep an eye on 
+
 ## Structure
 ```
 ├── notes/
-└── resources/
+├── templates/
+└── logs/
+
 ```
 
 ---
 
-*This repo is for team use and archiving purposes.*
+*This repo is for Rahq05 only but it's public for To spread knowledge and make it easily accessible* 

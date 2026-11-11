@@ -409,32 +409,23 @@ public ResponseEntity<Void> register(@RequestBody RegisterRequest req) {
 
 ### Pathway 2: Login (Authentication)
 
-Goal: prove who you are, then receive a JWT.
+Goal: prove who you are, then receive a JWT. This version uses the filter approach: login is handled by a custom filter that runs before the request ever reaches a controller. Background on the internals is in [[jwt-login-authentication-flow]].
 
 Steps:
 
-1. Client sends username + password to `/login` (open endpoint).
-2. The app builds `UsernamePasswordAuthenticationToken(username, password)` and calls `authenticationManager.authenticate(...)`.
-3. `DaoAuthenticationProvider` loads the user through `UserDetailsService`, then runs `passwordEncoder.matches(rawPassword, storedHash)`. Plain text is never compared.
-4. **Match:** the server generates a JWT signed with the secret and returns it with `200 OK`.
-5. **No match:** `BadCredentialsException`. You map it to `401`. **No token is issued.**
+- 1. Client sends username + password to `/login` (open endpoint, no token needed).
+- 2. The login filter matches the request and `attemptAuthentication()` builds an unauthenticated `UsernamePasswordAuthenticationToken(username, password)`, then calls `authenticationManager.authenticate(...)`.
+- 3. `ProviderManager` hands the token to `DaoAuthenticationProvider`, which loads the user through `UserDetailsService`, then runs `passwordEncoder.matches(rawPassword, storedHash)`. Plain text is never compared.
+- 4. Match: `successfulAuthentication()` runs, the server generates a JWT signed with the secret and returns it with `200 OK`.
+- 5. No match: `BadCredentialsException` is thrown, the filter catches it and `unsuccessfulAuthentication()` runs, which you map to `401`. No token is issued.
 
-```java
-@PostMapping("/login")
-public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest req) {
-    // This unauthenticated token only carries the raw credentials INTO the AuthenticationManager.
-    // Internally: UserDetailsService loads the user, then BCrypt matches raw password vs stored hash.
-    // On failure it THROWS (BadCredentialsException), so the next line never runs.
-    authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(req.username(), req.password()));
+> **Where each job lives:** reading credentials = `attemptAuthentication()`; checking them = `DaoAuthenticationProvider`; issuing the token = `successfulAuthentication()`; error response = `unsuccessfulAuthentication()`. The manager never hashes or issues tokens itself.
 
-    // Only reached if the credentials were correct: now it is safe to issue a token.
-    String token = jwtService.generateToken(req.username());
-    return ResponseEntity.ok(new AuthResponse(token));
-}
-```
+> **Open endpoint:** the login path must be allowed without authentication in the security rules, since the user has no token yet.
 
-Token generation and key setup (jjwt 0.12.x):
+#### Token generation and key setup (jjwt 0.12.x)
+
+Same in both approaches; only the place it is called from changes (here: inside `successfulAuthentication()`).
 
 ```java
 // The secret is stored Base64-encoded in config (e.g. application.properties), never hardcoded in code.
@@ -452,7 +443,13 @@ public String generateToken(String username) {
 }
 ```
 
-> **Check your course:** some courses implement login with a custom authentication filter instead of a controller. Both end the same way: verify credentials, then generate a token.
+#### Filter vs controller (quick comparison)
+
+- **Controller way:** the controller calls `authenticate()` itself; failure surfaces as an exception inside Spring MVC, so a `@ControllerAdvice` can map it to `401`.
+- **Filter way:** the filter calls `authenticate()` inside the security layer, before `DispatcherServlet`; failure goes through `unsuccessfulAuthentication()`, and any other error needs a filter-level handler.
+- Both end the same way: verify credentials, then generate a token.
+
+> **Note:** some courses implement login with a custom authentication filter instead of a controller. Both end the same way: verify credentials, then generate a token.
 
 ---
 
@@ -907,11 +904,17 @@ so what happens is:
 steps :
 1. impelement the `attmeptAuthentications` 
 2. Add the written filter in `filterChain()`
+3. Implement the custom authetication manager in `CustomAuthenticationManager`
+	1. Create the manager module first 
+	2. edit the `authenticationFilter` to return creds to manager
+4. ==add the `successfulAuthentication` inside `AuthenticationFilter` which gonna invoked if password hashes are match== "not written yet" 
+5. ==add the `unSuccessfulAuthentication` inside the same file which gonna be invoked if password hashes didnt match== "not written yet"
 
 
 
 step 1: implementing the `attmeptAuthentications`:
 inside `project/security/filter/AuthenticationFilter.java`
+>Note: this step is to show if creds arrives, follow the steps to see when we send creds to manager
 ```java 
 
 
@@ -959,13 +962,18 @@ step 2: Add the written filter in `filterChain()`
 @AllArgsConstructor
 public class SecurityConfig {
 
+	// ---------vvvvvvvvvvvvv-------------------
+	// this will be disscussed further
+	CustomAuthenticationManager customAuthenticationManager;
+	
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 //  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-        AuthenticationFilter authenticationFilter = new AuthenticationFilter();
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter(customAuthenticationManager);
         //needed a variable to hold the filter, so you could call a setter on it before adding it to the chain
+        //EDIT: added a customAuthenticationManager object on this object cuz it's not expecting as to return that
         
         authenticationFilter.setFilterProcessesUrl("/authenticate");
         // tells the filter “only react to `POST /authenticate`”.
@@ -994,3 +1002,140 @@ public class SecurityConfig {
 }
 ```
 
+
+
+3.1. Implement the custom authetication manager in `CustomAuthenticationManager`
+inside `<YOUT-PROJECT>/security/manager/CustomAuthenticationManager.java`
+
+>Note: the user isnt checked here cuz we added to `userService.getUser()` to user `Optional<User>` which gonna deal with it (see incoming notes for better understanding)
+```java
+@Component 
+public class CustomAuthenticationManager implements AuthenticationManager{
+
+    private UserService userService;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+            
+        // here we received the the user creds and fetched from records by name
+        User user = userService.getUser(authentication.getName());
+        //NOTE: we are not checking if the user is exist in records cuz we already put a Optional<User> in userService.getUser()
+        //      and that in case of username was null it will throw a EntityNotFoundException and nothing reaches here
+
+        // compare if hashed password of the record and request. if not matched then an excpetion will be thrown
+        if(!bCryptPasswordEncoder.matches(authentication.getCredentials().toString(), user.getPassword())){
+            throw new BadCredentialsException("Wrong password Nigga");
+        }
+		
+        // if the flow reaches here then it means everything is great and user is authenticated 
+        return new UsernamePasswordAuthenticationToken(authentication.getName(), user.getPassword());
+    }
+
+}
+
+```
+
+3.2. edit the `authenticationFilter` to return creds to manager
+```java
+@AllArgsConstructor 
+public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter{
+
+   
+    private AuthenticationManager authenticationManager;
+
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+            throws AuthenticationException {
+        try{
+                User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
+                
+	    // ---------------- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv --------------------------------
+                // we need the authenticationManager to fetch the credintials to see them so here we passing 
+                // user creditnals to it 
+                Authentication authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
+                return authenticationManager.authenticate(authentication);
+		// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+        }catch(IOException e){
+            // System.out.println(e.getMessage());
+            throw new RuntimeException();
+        }
+        //----------VVVVVVV DELETED VVVVV-----------------
+        //return super.attemptAuthentication(request, response);
+        // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    }
+}
+```
+
+
+
+4. add the `successfulAuthentication` which gonna invoked after returning the authentication object
+inside `<YOUR-PROJECT>/security/filter/AuthenticationFilter.java`
+>Note: COMPLETE THE CODE HERE 
+```java
+@Override
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+            Authentication authResult) throws IOException, ServletException {
+        // TODO Auto-generated method stub
+        super.successfulAuthentication(request, response, chain, authResult);
+    }
+```
+
+
+
+EXTRA STEP 1 : here's the point where i put user service to use `Optional<User>`
+here i dealt with this problem earlier that if nothing returns there's a method that cheks
+```java
+@Service
+@AllArgsConstructor
+public class UserServiceImpl implements UserService {
+
+// ---- code snippets -------
+	// here it tries to get the user and if not found it will throw an exception
+	static User unwrapUser(Optional<User> entity, Long id) {
+        if (entity.isPresent()) return entity.get();
+        else throw new EntityNotFoundException(id, User.class);
+    }
+
+    @Override
+    public User getUser(String username) {
+        // this gonna try to find the user from the repo 
+        Optional<User> user = userRepository.findByUsername(username); // <<<<< this line
+        return unwrapUser(user, 404L);
+    }
+    
+```
+
+EXTRA STEP 2: 
+i also updated the exception to throw a `EntityNotFoundExcpeiton` when username doesnt exist
+```java
+public class ExceptionHandlerFilter extends OncePerRequestFilter{
+
+    
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        // -------vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv----------------
+            try{
+                filterChain.doFilter(request, response);
+                
+            }catch(EntityNotFoundException e){
+            // if username not exist
+                System.out.println(e.getMessage());
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("ENTITY NOT FOUND");
+                response.getWriter();
+		// --------^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-----------------
+            }catch(RuntimeException e){
+            // if fields was wrong
+                System.out.println(e.getMessage());
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("BAD REQUEST");
+                response.getWriter();
+
+            }
+    }
+}
+```

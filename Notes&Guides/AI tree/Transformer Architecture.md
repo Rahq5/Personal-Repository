@@ -143,7 +143,7 @@ A regular feedforward network takes one input vector and passes it through layer
 - **Why "position-wise" instead of processing all positions together:** 
 	  since attention already handled the cross-word mixing, the FFN doesn't need to see other positions at all — keeping it independent per position makes it computationally simple (can run in parallel across all positions) and keeps its role clearly separate from attention's role.
 
-## Add & Norm (Residual Connections and Layer Normalization)****
+## Add & Norm (Residual Connections and Layer Normalization)
 
 **Add & Norm** is a two-step operation applied after every sub-layer in a transformer block (Multi-Head Attention, Masked Multi-Head Attention, or Feed Forward).
 

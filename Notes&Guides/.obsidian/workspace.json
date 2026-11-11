@@ -13,6 +13,20 @@
             "state": {
               "type": "markdown",
               "state": {
+                "file": "AI tree/Prompt Enhancer.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Prompt Enhancer"
+            }
+          },
+          {
+            "id": "069d1fce88d2a9cf",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
                 "file": "SpringBoot/04-Spring-Security/03-Token_Based_Authentiation_(JWT).md",
                 "mode": "source",
                 "source": false
@@ -83,7 +97,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 278.2169189453125
   },
   "right": {
     "id": "af6e662e9ade4ceb",
@@ -147,7 +161,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "SpringBoot/04-Spring-Security/03-Token_Based_Authentiation_(JWT).md",
+                "file": "AI tree/Prompt Enhancer.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -191,16 +205,26 @@
   },
   "active": "90447b49dba14ce0",
   "lastOpenFiles": [
-    "DailyReports/2026-11-03.md",
+    "AI tree/TOC.md",
     "SpringBoot/04-Spring-Security/03-Token_Based_Authentiation_(JWT).md",
+    "AI tree/Prompt Enhancer.md",
+    "AI tree/Prompt engineering.md",
+    "jwt-login-authentication-flow.md",
+    "AI tree/Research (TheArtOfNotForgetting).md",
+    "SpringBoot/04-Spring-Security/02-Spring-Security-Intro.md",
+    "Rust/04-Ownership.md",
+    "Rust/03-Rust_Common_Concepts.md",
+    "Rust/02-Building_Guessing_game.md",
+    "Rust/07-Enums.md",
+    "Rust/08-Packages, Crates and modules.md",
+    "Rust/09-Input_and_Output_Files.md",
+    "Untitled.canvas",
+    "DailyReports/2026-11-03.md",
     "SpringBoot/Media/Untitled Diagram.drawio.png",
     "SpringBoot/Media/Untitled Diagram.jpg",
-    "Untitled.canvas",
     "202611022244.md",
     "AI tree/LLM-Inference.md",
-    "Rust/07-Enums.md",
     "AI tree/AI_Root.md",
-    "AI tree/TOC.md",
     "Rust/01-Introduction_To_Rust.md",
     "DailyReports/template/2026-07-25.md",
     "Linux/raspi/bugsAndFixes/raspiHeadlessSetupReport.md",
@@ -211,16 +235,6 @@
     "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕07∕14.md",
     "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕10∕25.md",
     "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕10∕20.md",
-    "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕10∕19.md",
-    "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕10∕18.md",
-    "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕10∕13.md",
-    "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕10∕12.md",
-    "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕10∕11.md",
-    "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕10∕07.md",
-    "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕10∕06.md",
-    "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕10∕04.md",
-    "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕09∕30.md",
-    "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕09∕29.md",
     "DailyReports/LeapDailyReports_aligned/LeapDailyReports/files",
     "DailyReports/LeapDailyReports_aligned/LeapDailyReports",
     "DailyReports/LeapDailyReports_aligned",

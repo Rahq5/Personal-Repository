@@ -791,9 +791,9 @@ So the point here is to make an endpoint open for anyone.
 ### implementation
 
 steps:
-1. we gonna add the permitAll to register endpoint
-2. save user credentials to the database 
-3. encrypting password on saving to database; so no to plain passwords on databases
+1. we gonna add the permitAll to register endpoint [[#^reg-step-1|click here]]
+2. save user credentials to the database [[#^reg-step-2|click here]]
+3. encrypting password on saving to database; so no to plain passwords on databases [[#^reg-step-3|click here]]
 
 
 Step 1: permitting register
@@ -826,6 +826,7 @@ public class SecurityConfig {
     
 }
 ```
+^reg-step-1
 
 step 2: saving user to database
 ```java
@@ -852,6 +853,7 @@ public class UserController {
 
 }
 ```
+^reg-step-2
 
 step 3: encrypting the password before saving to database
 >Note: some codes are deleted in order to focus on the important part (dont worry nothing important got deleted :) )
@@ -877,6 +879,7 @@ public class UserServiceImpl implements UserService {
     
 }
 ```
+^reg-step-3
 
 now try to send via postman a post request with this JSON body:
 ```json
@@ -899,16 +902,17 @@ so what happens is:
 2. then this object that contains the creds will be sent over to `AuthManager` 
 3. the `AuthManager` gonna perform a hash to the password then compare it to the hash found in the records
 	1. if matched: it's gonna return the authentication object and upon that it will call `successAuth()` which is gonna create the JWT token, then sends back the JWT token to the user 
+		1. In details: `successfulAuthentication()` will return the payload but mixed with the signtature which gonna be the jwt token it self (header+payload+signature)
 	2. if not matched : nothing is returned and no token is created 
 ### implementation
 steps :
-1. impelement the `attmeptAuthentications` 
-2. Add the written filter in `filterChain()`
-3. Implement the custom authetication manager in `CustomAuthenticationManager`
-	1. Create the manager module first 
-	2. edit the `authenticationFilter` to return creds to manager
-4. ==add the `successfulAuthentication` inside `AuthenticationFilter` which gonna invoked if password hashes are match== "not written yet" 
-5. ==add the `unSuccessfulAuthentication` inside the same file which gonna be invoked if password hashes didnt match== "not written yet"
+1. impelement the `attmeptAuthentications` [[#^login-step-1|click here]]
+2. Add the written filter in `filterChain()` [[#^login-step-2|click here]]
+3. Implement the custom authentication manager in `CustomAuthenticationManager` [[#^login-step-3-1|click here]]
+	1. Create the manager module first [[#^login-step-3-1|click here]]
+	2. edit the `authenticationFilter` to return creds to manager [[#^login-step-3-2|click here]]
+4. add the `successfulAuthentication` inside `AuthenticationFilter` which gonna invoked if password hashes are match [[#^login-step-4|click here]]
+5. add the `unSuccessfulAuthentication` inside the same file which gonna be invoked if password hashes didnt match [[#^login-step-5|click here]]
 
 
 
@@ -949,6 +953,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 }
 
 ```
+^login-step-1
 
 >Note: to confirm what i meant by "matching fields".
 >assuming that user.java got a field called "password". if the request sends this field but written in a diffirent way like "passwordddd" it will be rejected  
@@ -1001,6 +1006,7 @@ public class SecurityConfig {
     
 }
 ```
+^login-step-2
 
 
 
@@ -1035,6 +1041,7 @@ public class CustomAuthenticationManager implements AuthenticationManager{
 }
 
 ```
+^login-step-3-1
 
 3.2. edit the `authenticationFilter` to return creds to manager
 ```java
@@ -1068,21 +1075,55 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter{
     }
 }
 ```
+^login-step-3-2
 
 
 
 4. add the `successfulAuthentication` which gonna invoked after returning the authentication object
 inside `<YOUR-PROJECT>/security/filter/AuthenticationFilter.java`
->Note: COMPLETE THE CODE HERE 
+>Note: here where token is given to user finally 
 ```java
-@Override
+  @Override
+    // if you reach here that means your password matches the records, congrats
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
             Authentication authResult) throws IOException, ServletException {
-        // TODO Auto-generated method stub
-        super.successfulAuthentication(request, response, chain, authResult);
+                // our string token 
+                String token = JWT.create()
+
+                    // has our subject of authenticated user 
+                    .withSubject(authResult.getName())
+
+                    // time of expiration, which gonna be in milliseconds 
+                    .withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstants.TOKEN_EXPIRATION))
+
+                    // sign our jwt token which holds the secret key using the HMAC512 algorithm
+                    .sign(Algorithm.HMAC512(SecurityConstants.SECRET_KEY));
+
+                // Adds the HTTP response header "Authorization: Bearer <jwt>" so the client
+                // can store the token and send it back on later requests
+                response.addHeader(SecurityConstants.AUTHORIZATION, SecurityConstants.BEARER + token);
+    }
+}
+```
+^login-step-4
+
+
+5. some
+
+```java
+@Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationException failed) throws IOException, ServletException {
+        
+        // we dont want to return (200 OK) so we gotta update this one
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+        //just some contents to show cause of failure
+        response.getWriter().write("you're not authorized");
+        response.getWriter();
     }
 ```
-
+^login-step-5
 
 
 EXTRA STEP 1 : here's the point where i put user service to use `Optional<User>`
@@ -1137,5 +1178,19 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter{
 
             }
     }
+}
+```
+
+EXTRA Step3: this is the constants i used in the course so u dont get lost with them 
+```java
+
+public class SecurityConstants {
+	 //Your secret should always be strong (uppercase, lowercase, numbers, symbols) so that nobody can potentially decode the signature.    
+    public static final String SECRET_KEY = "bQeThWmZq4t7w!z$C&F)J@NcRfUjXn2r5u8x/A?D*G-KaPdSgVkYp3s6v9y$B&E)";
+    
+    public static final int TOKEN_EXPIRATION = 7200000; // 7200000 milliseconds = 7200 seconds = 2 hours.
+    public static final String BEARER = "Bearer "; // Authorization : "Bearer " + Token 
+    public static final String AUTHORIZATION = "Authorization"; // "Authorization" : Bearer Token
+    public static final String REGISTER_PATH = "/user/register"; // Public path that clients can use to register.
 }
 ```

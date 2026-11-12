@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AI tree/Prompt Enhancer.md",
+                "file": "SpringBoot/04-Spring-Security/03-Token_Based_Authentiation_(JWT).md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Prompt Enhancer"
+              "title": "03-Token_Based_Authentiation_(JWT)"
             }
           },
           {
@@ -161,7 +161,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "AI tree/Prompt Enhancer.md",
+                "file": "SpringBoot/04-Spring-Security/03-Token_Based_Authentiation_(JWT).md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -205,9 +205,13 @@
   },
   "active": "90447b49dba14ce0",
   "lastOpenFiles": [
+    "c3-component.md",
+    "c2-container.md",
+    "c1-system-context.md",
+    "AI tree/Prompt Enhancer.md",
+    "Untitled.canvas",
     "AI tree/TOC.md",
     "SpringBoot/04-Spring-Security/03-Token_Based_Authentiation_(JWT).md",
-    "AI tree/Prompt Enhancer.md",
     "AI tree/Prompt engineering.md",
     "jwt-login-authentication-flow.md",
     "AI tree/Research (TheArtOfNotForgetting).md",
@@ -218,7 +222,6 @@
     "Rust/07-Enums.md",
     "Rust/08-Packages, Crates and modules.md",
     "Rust/09-Input_and_Output_Files.md",
-    "Untitled.canvas",
     "DailyReports/2026-11-03.md",
     "SpringBoot/Media/Untitled Diagram.drawio.png",
     "SpringBoot/Media/Untitled Diagram.jpg",
@@ -232,9 +235,6 @@
     "DailyReports/LeapDailyReports_aligned/LeapDailyReports.zip",
     "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕10∕26.md",
     "DailyReports/LeapDailyReports/Leap daily reports.md",
-    "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕07∕14.md",
-    "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕10∕25.md",
-    "DailyReports/LeapDailyReports_aligned/LeapDailyReports/2026∕10∕20.md",
     "DailyReports/LeapDailyReports_aligned/LeapDailyReports/files",
     "DailyReports/LeapDailyReports_aligned/LeapDailyReports",
     "DailyReports/LeapDailyReports_aligned",

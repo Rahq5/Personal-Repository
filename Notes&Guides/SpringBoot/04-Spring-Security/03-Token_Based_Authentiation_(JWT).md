@@ -1194,3 +1194,76 @@ public class SecurityConstants {
     public static final String REGISTER_PATH = "/user/register"; // Public path that clients can use to register.
 }
 ```
+
+
+
+## Authorize requests
+
+### Recap
+after the user logged in and received the jwt in the `Authorization` response header, the client sends it back with every protected request in the same header as `Bearer <jwt>`.
+
+so what happens is:
+1. our `JWTAuthorizationFilter` reads the `Authorization` header and removes the string `Bearer ` part, so we work with the token only
+2. then the token is verified with the same algorithm and secret used when the token was created in `successfulAuthentication()`
+	1. if the signature is wrong or the token is expired, an exception is thrown and the request stops here
+3. from the verified token we take the `sub` (subject), which is the username
+4. then we create an `Authentication` object with that username and set it on the `SecurityContextHolder`, so the rest of the filters and the controller know who is making the request
+5. finally we call `filterChain.doFilter(request, response)` to move to the next filter, if we skip it the request stops at our filter and never reaches the controller
+
+### Implementation
+steps:
+1. clean the token from the `Bearer ` part [[#^authz-step-1|click here]]
+2. verify the token and read the subject [[#^authz-step-2|click here]]
+3. set the authentication on the security context holder [[#^authz-step-3|click here]]
+4. continue the chain so the request reaches the controller [[#^authz-step-4|click here]]
+
+step 1: cleaning the token string
+inside `<YOUR-PROJECT>/security/filter/JWTAuthorizationFilter.java`
+```java
+public class JWTAuthorizationFilter extends OncePerRequestFilter {
+
+    // here the authorization is in this format string --> "Bearer <JWT>"
+    // so we want to strip the word "Bearer " in order to work with the token only
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+
+        //Step 1: cleaned the token string from "Bearer " part so we left off with the token only
+        String BearerToken = request.getHeader("Authorization"); //stringfiy it
+        String token = BearerToken.replace(SecurityConstants.BEARER, ""); // strip out the "Bearer"
+```
+^authz-step-1
+
+step 2: verifying the token
+```java
+        //Step 2: verify the given token, if token is valid and no exceptions thrown it will pass.
+        // here a function the gonna compare the token using the same algorithm used for AuthenticationFilter.successfulAuthentication()
+        String user = JWT.require(Algorithm.HMAC512(SecurityConstants.SECRET_KEY))
+                .build()
+                .verify(token) // here it where it's getting verified
+                .getSubject();
+```
+^authz-step-2
+
+step 3: setting the authentication on the security context holder
+```java
+        //Step 3: The verified token's subject is the username. We wrap it in an Authentication object
+        // with no credentials, then put it in the SecurityContextHolder so Spring Security
+        // treats this request as already authenticated and later code can read the current user.
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user, null);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+```
+^authz-step-3
+
+step 4: continuing the chain
+```java
+        //Note: without this call the request stops at our filter and never reaches the controller
+        filterChain.doFilter(request, response);
+    }
+}
+```
+^authz-step-4
+
+>Note: this filter is written but it is not added to `filterChain()` yet, that is the next step
+

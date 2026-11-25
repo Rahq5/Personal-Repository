@@ -1590,7 +1590,7 @@ except:
 | **nested if**      | `if condition:` then `if condition:` inside |
 # Functions (library and define)
 ## Defining
-you know what functions is so am skipping 
+you know what functions is so am skipping   
 
 how to write a function:
 ```python

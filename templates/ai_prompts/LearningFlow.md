@@ -29,3 +29,4 @@ On every topic you want to learn, master, apply the following questions and writ
 
 - You cannot skip any step.
 - You must search the web on each section and place the references at the end of the file.
+- Every code block must include comments that explain what the code does.

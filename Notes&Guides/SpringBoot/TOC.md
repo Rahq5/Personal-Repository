@@ -34,7 +34,7 @@
 - [Cascade](05-Databases/08-Cascade.md)
 
 ## 06. Extra
-- [Ambiguous Bean Problem](06-Extra/01-Ambiguous-Bean-Problem.md)
-- [OpenAPI Documentation — Contact API](06-Extra/02-OpenAPI-Documentation.md)
-- [API Testing — MockMVC](06-Extra/03-API-Testing-MockMVC.md)
-- [Break Point Sessions](06-Extra/04-Break-Point-Sessions.md) *(heading only — no content in source file)*
+- [Ambiguous Bean Problem](01-Ambiguous-Bean-Problem.md)
+- [OpenAPI Documentation — Contact API](02-OpenAPI-Documentation.md)
+- [API Testing — MockMVC](03-API-Testing-MockMVC.md)
+- [Break Point Sessions](04-Break-Point-Sessions.md) *(heading only — no content in source file)*

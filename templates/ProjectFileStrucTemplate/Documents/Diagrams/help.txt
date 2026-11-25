@@ -1,0 +1,4 @@
+here exist three things:
+- .drawio folder with it's .drawio file inside
+- .png folder with it's corresponding .svg file
+- individual .svg files
